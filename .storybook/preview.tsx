@@ -1,20 +1,19 @@
 import React from 'react';
-import { definePreview } from '@storybook/react-vite';
+import type { Preview } from '@storybook/react-vite';
 import { ThemeProvider } from '../src/theme/ThemeProvider';
 
 /**
- * Storybook v10 (react-vite): `definePreview` で preview annotations を型安全に。
+ * Storybook v10 (react-vite): preview annotations。
  *
- * ⚠️ 必ず `@storybook/react-vite` の `definePreview` を使うこと。
- * `storybook/internal/csf` の同名関数は renderer preset を合流しないので、
- * "Expected your framework's preset to export a `renderToCanvas` field"
- * で canvas が描けなくなる。
+ * ⚠️ 10.3.5 時点では `definePreview()` を通すと addon-docs の React
+ * renderer (`parameters.docs.renderer`) が合流せず MDX 描画時に
+ * `baseDocsParameter.renderer is not a function` で落ちる。
+ * 素の `export default` + `Preview` 型アノテーションが現状もっとも安全。
  *
- * CSF Factories (`defineMeta` + `meta.story()`) は v10.3 時点で公開 API として
- * 未提供 (experimental/内部)。stable 化されたらストーリーも移行する。
- * それまでは CSF3 + `satisfies Meta<typeof X>` を使う。
+ * CSF Factories (`defineMeta` / `meta.story()`) の stable 化と合わせて
+ * 将来 `definePreview` も利用可能になる見込み。
  */
-export default definePreview({
+const preview: Preview = {
   parameters: {
     layout: 'centered',
     a11y: { test: 'error' },
@@ -38,10 +37,12 @@ export default definePreview({
     },
   },
   decorators: [
-    (Story: any, ctx: any) => (
-      <ThemeProvider mode={ctx.globals.colorScheme}>
+    (Story, ctx) => (
+      <ThemeProvider mode={ctx.globals.colorScheme as 'light' | 'dark'}>
         <Story />
       </ThemeProvider>
     ),
   ],
-});
+};
+
+export default preview;
