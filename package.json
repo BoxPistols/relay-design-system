@@ -1,0 +1,40 @@
+{
+  "name": "aeros-design-system",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "MUI v9互換API設計のデザインシステム。Storybook v10、Vite、React 18+、TypeScript。",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build",
+    "test": "vitest",
+    "test:ui": "vitest --ui"
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@storybook/addon-a11y": "^10.3.0",
+    "@storybook/addon-docs": "^10.3.0",
+    "@storybook/addon-themes": "^10.3.0",
+    "@storybook/addon-vitest": "^10.3.0",
+    "@storybook/react-vite": "^10.3.0",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@vitejs/plugin-react": "^4.3.1",
+    "storybook": "^10.3.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.0",
+    "vitest": "^2.0.5"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "notes": {
+    "migration": "このパッケージは MUI v9 互換 API で設計されています。本番移行時は各コンポーネントを '@mui/material' の対応する export に置き換えてください。theme 定義も MUI の createTheme() 形式に変換可能です。"
+  }
+}

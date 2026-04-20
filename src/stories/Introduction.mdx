@@ -1,0 +1,30 @@
+import { Meta } from '@storybook/addon-docs/blocks';
+
+<Meta title="Introduction" />
+
+# Aeros Design System
+
+**MUI v9 互換 API** で構築されたデザインシステム。
+このパッケージの全コンポーネントは `@mui/material` と同じ props / slots 命名で設計されており、
+本番移行時は import 先を切り替えるだけで動くように作られている。
+
+## 3層トークン構造
+
+1. **Primitive** (`src/tokens/primitive.ts`) — 原子的な色値
+2. **Semantic** (`src/tokens/semantic.ts`) — 役割付きトークン (brand / success / danger 等)
+3. **Component** (`src/theme/createTheme.ts`) — MUI v9 の `styleOverrides.root.variants` 配列
+
+## v9 新要素
+
+- **NumberField** (`Components/v9 New/NumberField`) — Base UI ベース、locale format
+- **Menubar** (`Components/v9 New/Menubar`) — サブメニュー対応、Roving tabindex
+- **Stepper** (`Components/v9 New/Stepper`) — ol/li セマンティクス、ARIA 自動付与
+- **Chat** (`Components/v9 New/Chat`) ★ — 会話 UI + AI Copilot 対応
+- **Schedule** (`Components/v9 New/Schedule`) ★ — 月/週/日/タイムライン 4 ビュー
+- **DateField / TimeField / DateTimeField** (`Components/v9 New/DateField`) ★ — Base UI Pickers
+
+## v7/v8 → v9 マイグレーション
+
+- `MIGRATION.md` — 全体像・決定ガイド
+- `MIGRATION_V7_TO_V9.md` — v7 からの網羅版
+- `MIGRATION_V8_TO_V9.md` — v8 経由の最小差分
