@@ -6,3 +6,4 @@ storybook-static
 .vite
 tsconfig.tsbuildinfo
 .claude/settings.local.json
+.vercel

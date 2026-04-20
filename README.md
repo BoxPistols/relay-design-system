@@ -82,6 +82,38 @@ theme も `createTheme({ components: { MuiButton: { styleOverrides: { root: { va
 - [MIGRATION_V8_TO_V9.md](./MIGRATION_V8_TO_V9.md) — v8 経由の最小差分版
 - [../design-system-guide.md](../design-system-guide.md) — 新規構築ガイド (3軸分析・codemod・Storybook v10)
 
+## デプロイ
+
+### Vite アプリ → GitHub Pages (自動)
+
+`main` ブランチへの push で `.github/workflows/pages.yml` が走り、Pages に自動デプロイされる。
+初回のみ GitHub リポジトリの **Settings → Pages → Source = "GitHub Actions"** を選択する必要あり。
+
+公開 URL: `https://BoxPistols.github.io/relay-design-system/`
+
+`vite.config.ts` の `base` は `BASE_PATH` 環境変数で切替 (CI 時 `/relay-design-system/`、
+ローカル dev は `/`)。
+
+### Storybook → Vercel
+
+`vercel.json` に静的サイトとしての build 設定あり。2 通り:
+
+**A) ダッシュボード連携 (推奨)**
+1. [vercel.com/new](https://vercel.com/new) → `BoxPistols/relay-design-system` を Import
+2. `vercel.json` が検出され、以下が自動適用される:
+   - `buildCommand`: `pnpm build-storybook`
+   - `outputDirectory`: `storybook-static`
+3. Deploy → 以降 `main` への push で Production、PR で Preview 自動生成
+
+**B) CLI**
+```bash
+pnpm dlx vercel@latest link    # 初回: プロジェクト作成 or 既存と紐付け
+pnpm dlx vercel@latest         # Preview deploy
+pnpm dlx vercel@latest --prod  # Production deploy
+```
+
+Vercel ビルドは Storybook のみ (Vitest / Playwright は不要)。
+
 ## License
 
 MIT
