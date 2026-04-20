@@ -1,6 +1,6 @@
-# MUI v7/v8 → v9 マイグレーションガイド (Bento Design System)
+# MUI v7/v8 → v9 マイグレーションガイド (Relay Design System)
 
-Bento Design System は **MUI v9 互換 API** で設計されている。
+Relay Design System は **MUI v9 互換 API** で設計されている。
 本番 `@mui/material` へ切り替える場合、あるいは既存の v7/v8 コードベースを
 このデザインシステムの慣習に合わせて揃える場合の移行ガイド。
 
@@ -9,7 +9,7 @@ Bento Design System は **MUI v9 互換 API** で設計されている。
 - [どのドキュメントを読むべきか](#どのドキュメントを読むべきか)
 - [3 行まとめ](#3-行まとめ)
 - [作業フロー (推奨)](#作業フロー-推奨)
-- [Bento DS ↔ `@mui/material` 置換表](#bento-ds--muimaterial-置換表)
+- [Relay DS ↔ `@mui/material` 置換表](#relay-ds--muimaterial-置換表)
 - [v9 で追加された本パッケージ独自 API](#v9-で追加された本パッケージ独自-api)
 - [破壊的変更のトップ 10 (ホットスポット)](#破壊的変更のトップ-10-ホットスポット)
 - [よくある落とし穴](#よくある落とし穴)
@@ -73,20 +73,20 @@ pnpm storybook
 
 ---
 
-## Bento DS ↔ `@mui/material` 置換表
+## Relay DS ↔ `@mui/material` 置換表
 
-Bento のコンポーネントはすべて MUI v9 と同じ props / slots 命名で書かれているため、
+Relay のコンポーネントはすべて MUI v9 と同じ props / slots 命名で書かれているため、
 import 先を変えるだけで移行可能。
 
 ```diff
-- import { Button, TextField } from 'bento-design-system';
+- import { Button, TextField } from 'relay-design-system';
 + import { Button, TextField } from '@mui/material';
 ```
 
 ただし**新規コンポーネントはサブパス import**が必要 (tree-shaking のため):
 
 ```diff
-- import { NumberField, Menubar, Chat, Schedule, DateField } from 'bento-design-system';
+- import { NumberField, Menubar, Chat, Schedule, DateField } from 'relay-design-system';
 + import { NumberField } from '@mui/material/NumberField';
 + import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarSubmenu } from '@mui/material/Menubar';
 + import { Chat, ChatList, ChatMessage, ChatComposer, ChatHeader, ChatTypingIndicator } from '@mui/material/Chat';
@@ -99,8 +99,8 @@ import 先を変えるだけで移行可能。
 
 ```ts
 import { createTheme } from '@mui/material/styles';
-import { createThemeConfig } from 'bento-design-system';
-import { buildTokens } from 'bento-design-system';
+import { createThemeConfig } from 'relay-design-system';
+import { buildTokens } from 'relay-design-system';
 
 const theme = createTheme(createThemeConfig(buildTokens('light')));
 ```

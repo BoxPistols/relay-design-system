@@ -1,4 +1,4 @@
-# Bento Design System
+# Relay Design System
 
 **React + Vite + TypeScript × Storybook v10 × MUI v9 互換API** で構築された、
 フードデリバリー / モビリティ (レンタカー・配車) 向けローカルサービス基盤の参照デザインシステム。
@@ -56,7 +56,7 @@ src/
 以下の手順で置換可能:
 
 ```diff
-- import { Button, TextField, NumberField } from 'bento-design-system';
+- import { Button, TextField, NumberField } from 'relay-design-system';
 + import { Button, TextField } from '@mui/material';
 + import { NumberField } from '@mui/material/NumberField';
 ```

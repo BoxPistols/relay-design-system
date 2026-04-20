@@ -64,7 +64,7 @@ export const Basic: Story = {
 export const WithTyping: Story = {
   render: () => (
     <Chat height={420}>
-      <ChatHeader avatar={<ChatAIAvatar/>} title="Bento Copilot" subtitle="AI アシスタント" status="online"/>
+      <ChatHeader avatar={<ChatAIAvatar/>} title="Relay Copilot" subtitle="AI アシスタント" status="online"/>
       <ChatList>
         <ChatMessage variant="received" avatar={<ChatAIAvatar size={28}/>}>
           いつもの「ランチ B セット」で注文しますか？
@@ -76,7 +76,7 @@ export const WithTyping: Story = {
           reactions={['✨']}>
           承知しました。配達予想は 20 分後、到着は 12:25 ごろです。
         </ChatMessage>
-        <ChatTypingIndicator author="Bento Copilot"/>
+        <ChatTypingIndicator author="Relay Copilot"/>
       </ChatList>
       <ChatComposer
         suggestions={['注文内容を確認', 'おすすめを表示', '配達枠を変更']}

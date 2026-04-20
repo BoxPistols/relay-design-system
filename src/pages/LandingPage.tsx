@@ -18,7 +18,7 @@ export const LandingPage: React.FC = () => {
             <div style={{ width: 24, height: 24, borderRadius: 6, backgroundColor: t.brand.main, display: 'grid', placeItems: 'center' }}>
               <Icons.DeliveryDining fontSize="small" sx={{ color: t.text.onBrand, width: 14, height: 14 }}/>
             </div>
-            <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Bento</Typography>
+            <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Relay</Typography>
           </Stack>
           <Stack direction="row" spacing={3} sx={{ marginLeft: 40 }}>
             {['プロダクト', 'ソリューション', '料金', 'ドキュメント'].map((x) => (

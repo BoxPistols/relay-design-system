@@ -29,7 +29,7 @@ const Nav: React.FC<{
       }}>
         <Icons.DeliveryDining sx={{ color: '#fff', width: 13, height: 13 }}/>
       </div>
-      <Typography variant="caption" sx={{ fontWeight: 700, fontSize: 13 }}>Bento DS</Typography>
+      <Typography variant="caption" sx={{ fontWeight: 700, fontSize: 13 }}>Relay DS</Typography>
     </Stack>
     <ToggleButtonGroup size="small" exclusive value={page} onChange={(_: any, v: any) => v && setPage(v as Page)}>
       <ToggleButton value="foundations">Foundations</ToggleButton>

@@ -44,7 +44,7 @@ export const DashboardPage: React.FC = () => {
           <div style={{ width: 28, height: 28, borderRadius: 6, backgroundColor: t.brand.main, display: 'grid', placeItems: 'center' }}>
             <Icons.DeliveryDining fontSize="small" sx={{ color: t.text.onBrand }}/>
           </div>
-          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Bento</Typography>
+          <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Relay</Typography>
         </Stack>
         <List disablePadding>
           {[

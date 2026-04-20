@@ -66,7 +66,7 @@ export const StorybookPage: React.FC = () => {
         label: { control: 'text' }, disabled: { control: 'boolean' },
       },
       render: (args: any) => <Button {...args}>{args.label}</Button>,
-      code: "import { Button } from 'bento-design-system';\nimport { defineMeta } from '@storybook/react-vite';\n\nconst meta = defineMeta({ title: 'Inputs/Button', component: Button });\nexport default meta;\n\nexport const Primary = meta.story({\n  args: { variant: 'contained', color: 'primary', children: 'Primary' },\n});",
+      code: "import { Button } from 'relay-design-system';\nimport { defineMeta } from '@storybook/react-vite';\n\nconst meta = defineMeta({ title: 'Inputs/Button', component: Button });\nexport default meta;\n\nexport const Primary = meta.story({\n  args: { variant: 'contained', color: 'primary', children: 'Primary' },\n});",
     },
     'button-secondary': {
       title: 'Inputs / Button', name: 'Secondary',
@@ -122,7 +122,7 @@ export const StorybookPage: React.FC = () => {
         max: { control: 'number' }, step: { control: 'number' },
       },
       render: (args: any) => <div style={{ width: 220 }}><NumberField {...args}/></div>,
-      code: "// ★ MUI v9 新規\n// 本番: import { NumberField } from '@mui/material/NumberField';\nimport { NumberField } from 'bento-design-system';\n\nexport const Basic = meta.story({\n  args: { label: '数量', defaultValue: 1, min: 0, max: 99 },\n});",
+      code: "// ★ MUI v9 新規\n// 本番: import { NumberField } from '@mui/material/NumberField';\nimport { NumberField } from 'relay-design-system';\n\nexport const Basic = meta.story({\n  args: { label: '数量', defaultValue: 1, min: 0, max: 99 },\n});",
     },
     'nf-currency': {
       title: 'Inputs / NumberField', name: 'Currency',
@@ -152,7 +152,7 @@ export const StorybookPage: React.FC = () => {
           </MenubarMenu>
         </Menubar>
       ),
-      code: "// ★ MUI v9 新規\nimport { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from 'bento-design-system';\n\nexport const Basic = meta.story({\n  render: () => (\n    <Menubar>\n      <MenubarMenu>\n        <MenubarTrigger>ファイル</MenubarTrigger>\n        <MenubarContent>\n          <MenubarItem>新規作成</MenubarItem>\n        </MenubarContent>\n      </MenubarMenu>\n    </Menubar>\n  ),\n});",
+      code: "// ★ MUI v9 新規\nimport { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from 'relay-design-system';\n\nexport const Basic = meta.story({\n  render: () => (\n    <Menubar>\n      <MenubarMenu>\n        <MenubarTrigger>ファイル</MenubarTrigger>\n        <MenubarContent>\n          <MenubarItem>新規作成</MenubarItem>\n        </MenubarContent>\n      </MenubarMenu>\n    </Menubar>\n  ),\n});",
     },
     'mb-submenu': {
       title: 'Navigation / Menubar', name: 'WithSubmenu',
@@ -222,7 +222,7 @@ export const StorybookPage: React.FC = () => {
           ))}
         </div>
       ),
-      code: "import { primitive } from 'bento-design-system';\n\nexport const Palette = meta.story({\n  render: () => <ColorSwatchGrid colors={primitive.teal} />,\n});",
+      code: "import { primitive } from 'relay-design-system';\n\nexport const Palette = meta.story({\n  render: () => <ColorSwatchGrid colors={primitive.teal} />,\n});",
     },
     'typography': {
       title: 'Foundations / Typography', name: 'Scale', args: {}, argTypes: {},
