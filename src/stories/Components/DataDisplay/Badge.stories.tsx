@@ -2,14 +2,14 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Badge, IconButton, Stack } from '../../../components';
 import * as Icons from '../../../icons';
 
-const meta: Meta<typeof Badge> = {
+const meta = {
   title: 'Components/Data Display/Badge',
   component: Badge,
   argTypes: {
     color: { control: 'select', options: ['default', 'primary', 'error', 'warning', 'success'] },
     variant: { control: 'inline-radio', options: ['standard', 'dot'] },
   },
-};
+} satisfies Meta<typeof Badge>;
 export default meta;
 type Story = StoryObj<typeof Badge>;
 

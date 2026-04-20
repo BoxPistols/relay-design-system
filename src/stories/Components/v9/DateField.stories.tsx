@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { DateField, TimeField, DateTimeField } from '../../../components/DateField';
 import { Stack } from '../../../components';
 
-const meta: Meta<typeof DateField> = {
+const meta = {
   title: 'Components/v9 New/DateField',
   component: DateField,
   parameters: { layout: 'centered' },
   decorators: [(S) => <div style={{ width: 280 }}><S/></div>],
-};
+} satisfies Meta<typeof DateField>;
 export default meta;
 type Story = StoryObj<typeof DateField>;
 

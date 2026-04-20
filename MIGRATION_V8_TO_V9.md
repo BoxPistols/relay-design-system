@@ -174,7 +174,12 @@ const config: StorybookConfig = {
 export default config;
 ```
 
-### CSF Factories (Preview → v11 default)
+### CSF Factories (v11 default 予定 · 10.3 ではまだ非公開)
+
+> ⚠️ `defineMeta` は **Storybook 10.3 ではまだ公開 export されていない** (internal)。
+> 10.3 では CSF3 (`const meta = {...} satisfies Meta<typeof X>`) を維持し、
+> preview 側のみ `definePreview` で型安全化する運用を推奨。
+
 ```ts
 import { defineMeta } from '@storybook/react-vite';
 const meta = defineMeta({ title: 'Components/NumberField', component: NumberField });

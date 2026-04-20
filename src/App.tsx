@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { createContext, useContext, useState } from 'react';
 import { ThemeProvider } from './theme';
 import { IconButton, Stack, Typography, ToggleButtonGroup, ToggleButton } from './components';
 import * as Icons from './icons';
@@ -8,6 +8,22 @@ import {
 } from './pages';
 
 type Page = 'foundations' | 'v9new' | 'storybook' | 'dashboard' | 'map' | 'landing';
+
+/**
+ * Landing の CTA から Dashboard を開き、Dashboard 側で「新規キャンペーン」を
+ * 自動展開するためのクロスページ ナビゲーション文脈。
+ */
+type NavCtx = {
+  goto: (p: Page, intent?: 'open-campaign-dialog') => void;
+  intent: 'open-campaign-dialog' | null;
+  clearIntent: () => void;
+};
+const NavContext = createContext<NavCtx | null>(null);
+export const useNav = (): NavCtx => {
+  const c = useContext(NavContext);
+  if (!c) throw new Error('useNav must be used inside <App>');
+  return c;
+};
 
 const Nav: React.FC<{
   page: Page; setPage: (p: Page) => void;
@@ -49,18 +65,27 @@ const Nav: React.FC<{
 export const App: React.FC = () => {
   const [mode, setMode] = useState<'light' | 'dark'>('light');
   const [page, setPage] = useState<Page>('foundations');
+  const [intent, setIntent] = useState<NavCtx['intent']>(null);
+
+  const ctx: NavCtx = {
+    goto: (p, i = undefined) => { setPage(p); setIntent(i ?? null); },
+    intent,
+    clearIntent: () => setIntent(null),
+  };
 
   return (
-    <ThemeProvider mode={mode}>
-      <Nav page={page} setPage={setPage} mode={mode} setMode={setMode}/>
-      <main style={{ minHeight: 'calc(100vh - 50px)' }}>
-        {page === 'foundations' && <FoundationsPage/>}
-        {page === 'v9new'       && <V9NewPage/>}
-        {page === 'storybook'   && <StorybookPage/>}
-        {page === 'dashboard'   && <DashboardPage/>}
-        {page === 'map'         && <MapPage/>}
-        {page === 'landing'     && <LandingPage/>}
-      </main>
-    </ThemeProvider>
+    <NavContext.Provider value={ctx}>
+      <ThemeProvider mode={mode}>
+        <Nav page={page} setPage={(p) => { setPage(p); setIntent(null); }} mode={mode} setMode={setMode}/>
+        <main style={{ minHeight: 'calc(100vh - 50px)' }}>
+          {page === 'foundations' && <FoundationsPage/>}
+          {page === 'v9new'       && <V9NewPage/>}
+          {page === 'storybook'   && <StorybookPage/>}
+          {page === 'dashboard'   && <DashboardPage/>}
+          {page === 'map'         && <MapPage/>}
+          {page === 'landing'     && <LandingPage/>}
+        </main>
+      </ThemeProvider>
+    </NavContext.Provider>
   );
 };

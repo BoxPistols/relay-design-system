@@ -1,18 +1,38 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Typography, Stack, Button, IconButton, Chip, Avatar, Badge, TextField,
   Card, CardContent, List, ListItemButton, ListItemIcon, ListItemText,
   Tabs, Tab, ToggleButtonGroup, ToggleButton, LinearProgress, Alert,
   TableContainer, Table, TableHead, TableBody, TableRow, TableCell,
-  Sparkline,
+  Sparkline, Dialog, DialogTitle, DialogContent, DialogActions,
+  NumberField, Divider,
 } from '../components';
+import { DateField, TimeField } from '../components/DateField';
 import { useTokens } from '../theme';
 import { fonts } from '../tokens';
 import * as Icons from '../icons';
+import { useNav } from '../App';
 
 export const DashboardPage: React.FC = () => {
   const t = useTokens();
   const [tab, setTab] = useState(0);
+  const nav = useNav();
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [campaign, setCampaign] = useState({
+    name: '週末ランチキャンペーン',
+    discount: 15,
+    startDate: new Date(),
+    startTime: new Date(),
+    notes: '',
+  });
+
+  // Landing CTA からの intent を拾って自動で Dialog を開く
+  useEffect(() => {
+    if (nav.intent === 'open-campaign-dialog') {
+      setDialogOpen(true);
+      nav.clearIntent();
+    }
+  }, [nav.intent, nav]);
 
   const kpis = [
     { label: '本日の注文数', value: '2,384', delta: '+8.2%', trend: 'up', icon: <Icons.ReceiptLong/> },
@@ -87,7 +107,9 @@ export const DashboardPage: React.FC = () => {
             </div>
             <Stack direction="row" spacing={1}>
               <Button variant="outlined" size="small" startIcon={<Icons.Download/>}>エクスポート</Button>
-              <Button variant="contained" size="small" startIcon={<Icons.Add/>}>新規キャンペーン</Button>
+              <Button variant="contained" size="small" startIcon={<Icons.Add/>} onClick={() => setDialogOpen(true)}>
+                新規キャンペーン
+              </Button>
             </Stack>
           </div>
 
@@ -216,6 +238,75 @@ export const DashboardPage: React.FC = () => {
           </Card>
         </div>
       </main>
+
+      {/* デモ動線: Landing → Dashboard (intent) → Dialog で v9 の 3 プリミティブを一画面に */}
+      <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>新規キャンペーン</DialogTitle>
+        <DialogContent>
+          <Stack spacing={2} sx={{ paddingTop: 8 }}>
+            <TextField
+              label="キャンペーン名" fullWidth
+              value={campaign.name}
+              onChange={(e) => setCampaign({ ...campaign, name: e.target.value })}
+              slotProps={{ input: { startAdornment: <Icons.AutoAwesome fontSize="small"/> } }}
+            />
+            <Stack direction="row" spacing={2}>
+              <div style={{ flex: 1 }}>
+                <NumberField
+                  label="割引率 (%)"
+                  value={campaign.discount}
+                  onValueChange={(v) => setCampaign({ ...campaign, discount: v })}
+                  min={0} max={90} step={5}
+                />
+              </div>
+              <div style={{ flex: 1 }}>
+                <NumberField
+                  label="予算上限"
+                  defaultValue={500000} step={10000}
+                  format={{ style: 'currency', currency: 'JPY' }}
+                />
+              </div>
+            </Stack>
+            <Divider/>
+            <Stack direction="row" spacing={2}>
+              <div style={{ flex: 1 }}>
+                <DateField
+                  label="開始日"
+                  value={campaign.startDate}
+                  onChange={(d) => d && setCampaign({ ...campaign, startDate: d })}
+                  minDate={new Date()}
+                />
+              </div>
+              <div style={{ flex: 1 }}>
+                <TimeField
+                  label="開始時刻"
+                  value={campaign.startTime}
+                  onChange={(d) => d && setCampaign({ ...campaign, startTime: d })}
+                  step={30}
+                />
+              </div>
+            </Stack>
+            <TextField
+              label="メモ" multiline rows={3} fullWidth
+              value={campaign.notes}
+              onChange={(e) => setCampaign({ ...campaign, notes: e.target.value })}
+              placeholder="対象エリア、メニュー制限、備考など…"
+            />
+            <Alert severity="info">
+              <Typography variant="body2" sx={{ fontWeight: 600 }}>想定効果</Typography>
+              <Typography variant="caption" sx={{ color: 'inherit' }}>
+                過去 30 日の注文数ベースで推計: +{Math.round(campaign.discount * 18)} 件/日 (AI 需要予測)
+              </Typography>
+            </Alert>
+          </Stack>
+        </DialogContent>
+        <DialogActions>
+          <Button variant="text" onClick={() => setDialogOpen(false)}>キャンセル</Button>
+          <Button variant="contained" onClick={() => setDialogOpen(false)} startIcon={<Icons.Check/>}>
+            キャンペーン作成
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 };

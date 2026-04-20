@@ -1,14 +1,14 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Avatar, AvatarGroup, Stack } from '../../../components';
 
-const meta: Meta<typeof Avatar> = {
+const meta = {
   title: 'Components/Data Display/Avatar',
   component: Avatar,
   argTypes: {
     variant: { control: 'inline-radio', options: ['circular', 'rounded', 'square'] },
     size: { control: 'number' },
   },
-};
+} satisfies Meta<typeof Avatar>;
 export default meta;
 type Story = StoryObj<typeof Avatar>;
 

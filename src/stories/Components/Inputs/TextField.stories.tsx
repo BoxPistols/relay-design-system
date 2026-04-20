@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { TextField } from '../../../components';
 import * as Icons from '../../../icons';
 
-const meta: Meta<typeof TextField> = {
+const meta = {
   title: 'Components/Inputs/TextField',
   component: TextField,
   argTypes: {
@@ -14,7 +14,7 @@ const meta: Meta<typeof TextField> = {
   },
   args: { label: '注文 ID', placeholder: 'ORD-00000' },
   decorators: [(S) => <div style={{ width: 280 }}><S/></div>],
-};
+} satisfies Meta<typeof TextField>;
 export default meta;
 type Story = StoryObj<typeof TextField>;
 

@@ -255,6 +255,12 @@ codemod 出力をそのまま信じず、実挙動で差分確認を推奨。
 
 ## Storybook v10 / CSF Factories への移行
 
+> ⚠️ **注 (2026-04 時点)**: `defineMeta` / `meta.story()` の公開 export は
+> Storybook 10.3.x ではまだ stabilize していません (内部 API のみ)。
+> 下記パターンは **v11 で public 化予定** のものを先出し記載しており、
+> 10.3 本番コードベースでは **CSF3 + `satisfies Meta<typeof X>`** を推奨。
+> 実在する関連 API: `definePreview` (preview.tsx 用、10.3 で公開済)。
+
 MUI v9 と同時に Storybook を v10 (ESM-only) に揃えるのが実務的。詳細は
 [../design-system-guide.md §8](../design-system-guide.md) を参照。
 

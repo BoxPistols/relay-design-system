@@ -5,3 +5,4 @@ storybook-static
 *.log
 .vite
 tsconfig.tsbuildinfo
+.claude/settings.local.json

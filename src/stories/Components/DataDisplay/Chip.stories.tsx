@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Chip, Stack } from '../../../components';
 import * as Icons from '../../../icons';
 
-const meta: Meta<typeof Chip> = {
+const meta = {
   title: 'Components/Data Display/Chip',
   component: Chip,
   argTypes: {
@@ -11,7 +11,7 @@ const meta: Meta<typeof Chip> = {
     size: { control: 'inline-radio', options: ['small', 'medium'] },
   },
   args: { label: 'Chip' },
-};
+} satisfies Meta<typeof Chip>;
 export default meta;
 type Story = StoryObj<typeof Chip>;
 

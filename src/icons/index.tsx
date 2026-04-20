@@ -92,7 +92,8 @@ export const Event = make(<><rect x="3" y="4" width="18" height="18" rx="2"/><li
 export const Videocam = make(<><polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/></>);
 export const SmartToy = make(<><rect x="3" y="8" width="18" height="12" rx="2"/><circle cx="8.5" cy="14" r="1.2"/><circle cx="15.5" cy="14" r="1.2"/><path d="M12 4v4"/><circle cx="12" cy="3" r="1"/><line x1="8" y1="20" x2="8" y2="22"/><line x1="16" y1="20" x2="16" y2="22"/></>);
 export const Reply = make(<><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2a4 4 0 0 0-4-4H4"/></>);
-export const Schedule = make(<><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>);
+/** コンポーネントの Schedule と名前衝突回避のため ScheduleClock */
+export const ScheduleClock = make(<><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>);
 export const AccessAlarm = make(<><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 15 15"/><path d="M5 3 2 6"/><path d="M22 6l-3-3"/></>);
 export const Person = make(<><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>);
 

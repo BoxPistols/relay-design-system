@@ -6,9 +6,12 @@ import {
 import { useTokens } from '../theme';
 import { fonts } from '../tokens';
 import * as Icons from '../icons';
+import { useNav } from '../App';
 
 export const LandingPage: React.FC = () => {
   const t = useTokens();
+  const nav = useNav();
+  const launchCampaign = () => nav.goto('dashboard', 'open-campaign-dialog');
 
   return (
     <div>
@@ -50,8 +53,12 @@ export const LandingPage: React.FC = () => {
               ローカルサービスのための運用 OS。
             </Typography>
             <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ paddingTop: 16 }}>
-              <Button size="large" variant="contained" endIcon={<Icons.ArrowForward/>}>無料で始める</Button>
-              <Button size="large" variant="outlined" startIcon={<Icons.PlayArrow/>}>デモを見る (2分)</Button>
+              <Button size="large" variant="contained" endIcon={<Icons.ArrowForward/>} onClick={launchCampaign}>
+                キャンペーンを始める
+              </Button>
+              <Button size="large" variant="outlined" startIcon={<Icons.PlayArrow/>} onClick={() => nav.goto('dashboard')}>
+                デモを見る (2分)
+              </Button>
             </Stack>
           </Stack>
 
@@ -184,8 +191,16 @@ export const LandingPage: React.FC = () => {
             14 日間の無料トライアル。クレジットカード不要。いつでもキャンセル可能。
           </Typography>
           <Stack direction="row" spacing={1.5} justifyContent="center">
-            <Button size="large" variant="contained" sx={{ backgroundColor: t.bg.surface, color: t.text.primary }}>無料で始める</Button>
-            <Button size="large" variant="outlined" sx={{ borderColor: 'rgba(255,255,255,0.4)', color: 'inherit' }}>営業に相談</Button>
+            <Button size="large" variant="contained"
+              sx={{ backgroundColor: t.bg.surface, color: t.text.primary }}
+              onClick={launchCampaign}>
+              キャンペーンを始める
+            </Button>
+            <Button size="large" variant="outlined"
+              sx={{ borderColor: 'rgba(255,255,255,0.4)', color: 'inherit' }}
+              onClick={() => nav.goto('dashboard')}>
+              営業に相談
+            </Button>
           </Stack>
         </Card>
       </section>

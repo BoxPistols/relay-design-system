@@ -71,12 +71,19 @@ export type ScheduleProps = {
   onDateChange?: (d: Date) => void;
   events?: ScheduleEvent[];
   onEventClick?: (e: ScheduleEvent) => void;
+  /**
+   * 週ビュー / 日ビューで表示する時間帯 [開始時, 終了時)。
+   * デフォルト [6, 23) = 06:00〜22:59 (ディナーピーク込み)。
+   * フード配達・深夜営業・早朝配車など業態に合わせて切替可能。
+   */
+  hourRange?: [number, number];
   slots?: { toolbar?: React.ElementType };
   sx?: React.CSSProperties;
 };
 
 export const Schedule: React.FC<ScheduleProps> = ({
-  view = 'month', onViewChange, date, onDateChange, events = [], onEventClick, sx,
+  view = 'month', onViewChange, date, onDateChange, events = [], onEventClick,
+  hourRange = [6, 23], sx,
 }) => {
   const t = useTokens();
   const [internalDate, setInternalDate] = useState<Date>(date || new Date());
@@ -104,7 +111,7 @@ export const Schedule: React.FC<ScheduleProps> = ({
         onShift={shift} onToday={() => setDate(new Date())} onViewChange={setView}
       />
       {curView === 'month' && <MonthView date={curDate} events={events} onSelectDate={setDate} onEventClick={onEventClick}/>}
-      {curView === 'week' && <WeekView date={curDate} events={events} onEventClick={onEventClick}/>}
+      {curView === 'week' && <WeekView date={curDate} events={events} onEventClick={onEventClick} hourRange={hourRange}/>}
       {curView === 'day' && <DayView date={curDate} events={events} onEventClick={onEventClick}/>}
       {curView === 'timeline' && <TimelineView events={events} onEventClick={onEventClick}/>}
     </div>
@@ -242,10 +249,12 @@ const MonthView: React.FC<{
 const WeekView: React.FC<{
   date: Date; events: ScheduleEvent[];
   onEventClick?: (e: ScheduleEvent) => void;
-}> = ({ date, events, onEventClick }) => {
+  hourRange?: [number, number];
+}> = ({ date, events, onEventClick, hourRange = [6, 23] }) => {
   const t = useTokens();
   const start = startOfWeek(date);
-  const hours = Array.from({ length: 12 }, (_, i) => i + 7); // 7:00 - 18:00
+  const [fromH, toH] = hourRange;
+  const hours = Array.from({ length: Math.max(1, toH - fromH) }, (_, i) => i + fromH);
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '60px repeat(7, 1fr)' }}>

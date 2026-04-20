@@ -1,7 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Alert, Stack } from '../../../components';
 
-const meta: Meta<typeof Alert> = {
+const meta = {
   title: 'Components/Feedback/Alert',
   component: Alert,
   argTypes: {
@@ -10,7 +10,7 @@ const meta: Meta<typeof Alert> = {
   },
   args: { severity: 'info', children: '新しいファームウェアが利用可能です' },
   decorators: [(S) => <div style={{ width: 420 }}><S/></div>],
-};
+} satisfies Meta<typeof Alert>;
 export default meta;
 type Story = StoryObj<typeof Alert>;
 

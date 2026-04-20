@@ -1,10 +1,10 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Select, MenuItem } from '../../../components';
 
-const meta: Meta = {
+const meta = {
   title: 'Components/Inputs/Select',
   decorators: [(S) => <div style={{ width: 220 }}><S/></div>],
-};
+} satisfies Meta;
 export default meta;
 
 export const Default: StoryObj = {

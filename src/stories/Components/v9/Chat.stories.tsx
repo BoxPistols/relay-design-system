@@ -6,12 +6,12 @@ import {
 import { Avatar, IconButton } from '../../../components';
 import * as Icons from '../../../icons';
 
-const meta: Meta<typeof Chat> = {
+const meta = {
   title: 'Components/v9 New/Chat',
   component: Chat,
   parameters: { layout: 'padded' },
   decorators: [(S) => <div style={{ width: 520 }}><S/></div>],
-};
+} satisfies Meta<typeof Chat>;
 export default meta;
 type Story = StoryObj<typeof Chat>;
 

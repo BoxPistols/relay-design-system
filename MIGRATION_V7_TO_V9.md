@@ -558,7 +558,13 @@ decorators: [
 ],
 ```
 
-### CSF Factories (Preview → v11 default)
+### CSF Factories (v11 default 予定 · 10.3.x ではまだ非公開)
+
+> ⚠️ Storybook 10.3.x 時点では `defineMeta` / `meta.story()` は**公開 export されていない**
+> (internal API)。下記サンプルは v11 以降を想定した先出し。10.3.x では CSF3 +
+> `satisfies Meta<typeof X>` を使い、`.storybook/preview.tsx` 側は `definePreview`
+> (公開済) で型安全化するのが現実解。
+
 ```ts
 import { defineMeta } from '@storybook/react-vite';
 import { expect, userEvent, within } from 'storybook/test';

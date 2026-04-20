@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { IconButton, Stack } from '../../../components';
 import * as Icons from '../../../icons';
 
-const meta: Meta<typeof IconButton> = {
+const meta = {
   title: 'Components/Inputs/IconButton',
   component: IconButton,
   argTypes: {
@@ -10,7 +10,7 @@ const meta: Meta<typeof IconButton> = {
     color: { control: 'select', options: ['default', 'primary', 'secondary', 'inherit'] },
     disabled: { control: 'boolean' },
   },
-};
+} satisfies Meta<typeof IconButton>;
 export default meta;
 type Story = StoryObj<typeof IconButton>;
 

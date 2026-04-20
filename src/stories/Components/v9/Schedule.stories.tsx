@@ -2,12 +2,12 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Schedule } from '../../../components/Schedule';
 import type { ScheduleEvent } from '../../../components/Schedule';
 
-const meta: Meta<typeof Schedule> = {
+const meta = {
   title: 'Components/v9 New/Schedule',
   component: Schedule,
   parameters: { layout: 'padded' },
   decorators: [(S) => <div style={{ width: 860 }}><S/></div>],
-};
+} satisfies Meta<typeof Schedule>;
 export default meta;
 type Story = StoryObj<typeof Schedule>;
 

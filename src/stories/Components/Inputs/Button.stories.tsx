@@ -2,7 +2,7 @@ import type { Meta, StoryObj } from '@storybook/react-vite';
 import { Button, Stack } from '../../../components';
 import * as Icons from '../../../icons';
 
-const meta: Meta<typeof Button> = {
+const meta = {
   title: 'Components/Inputs/Button',
   component: Button,
   argTypes: {
@@ -13,7 +13,7 @@ const meta: Meta<typeof Button> = {
     fullWidth: { control: 'boolean' },
   },
   args: { children: 'Button' },
-};
+} satisfies Meta<typeof Button>;
 export default meta;
 
 type Story = StoryObj<typeof Button>;
