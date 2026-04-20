@@ -40,6 +40,9 @@ jobs:
           BASE_PATH: /relay-design-system/
         run: pnpm build
       - uses: actions/configure-pages@v5
+        with:
+          # Pages サイトが未作成なら自動で enable する (要 Pages の Source 設定は別途)
+          enablement: true
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist
