@@ -27,7 +27,7 @@ type Story = StoryObj<typeof NumberField>;
 export const Basic: Story = {};
 
 export const Range: Story = {
-  args: { label: '飛行高度 (m)', defaultValue: 120, min: 0, max: 500, step: 10 },
+  args: { label: '配達距離 (km)', defaultValue: 3, min: 0, max: 20, step: 1 },
 };
 
 export const Currency: Story = {

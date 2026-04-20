@@ -10,7 +10,7 @@ export const Basic: StoryObj = {
       <CardHeader title="運用レポート" subheader="2026年4月20日"/>
       <CardContent>
         <Typography variant="body2" color="secondary">
-          本日の運用状況サマリー。全機体が正常に稼働中。
+          本日の運用状況サマリー。全加盟店・配達員が正常に稼働中。
         </Typography>
       </CardContent>
       <CardActions>

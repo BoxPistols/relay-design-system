@@ -12,7 +12,7 @@ const meta: Meta<typeof TextField> = {
     required: { control: 'boolean' },
     multiline: { control: 'boolean' },
   },
-  args: { label: '機体ID', placeholder: 'DRN-0000' },
+  args: { label: '注文 ID', placeholder: 'ORD-00000' },
   decorators: [(S) => <div style={{ width: 280 }}><S/></div>],
 };
 export default meta;
@@ -21,7 +21,7 @@ type Story = StoryObj<typeof TextField>;
 export const Basic: Story = {};
 export const WithHelperText: Story = { args: { helperText: '5〜10文字で入力', label: 'Email' } };
 export const ErrorState: Story = { args: { error: true, helperText: '必須項目です' } };
-export const Disabled: Story = { args: { disabled: true, defaultValue: 'DRN-0042' } };
+export const Disabled: Story = { args: { disabled: true, defaultValue: 'ORD-20426' } };
 export const WithAdornment: Story = {
   args: { label: '検索', slotProps: { input: { startAdornment: <Icons.Search fontSize="small"/> } } },
 };

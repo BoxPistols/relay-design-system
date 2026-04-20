@@ -19,15 +19,15 @@ const mk = (dayOffset: number, h: number, dur: number, title: string, color?: Sc
 };
 
 const sample: ScheduleEvent[] = [
-  mk(0, 9, 1, '朝会', 'info'),
-  mk(0, 11, 2, 'D-001 フライト', 'primary', '大手町 → 羽田'),
-  mk(0, 14, 1, '機体点検', 'warning'),
-  mk(1, 10, 3, 'D-003 長距離ミッション', 'success', '東京湾巡回'),
-  mk(1, 15, 1, '安全講習', 'secondary'),
-  mk(2, 8, 1, 'バッテリー交換'),
-  mk(2, 13, 2, 'D-007 撮影案件', 'primary'),
-  mk(3, 10, 1, '整備検査', 'error', '年次点検'),
-  mk(5, 9, 4, 'D-010 広域調査', 'info'),
+  mk(0, 9, 1, '朝礼 / 配達員ブリーフィング', 'info'),
+  mk(0, 11, 2, 'ランチピーク枠', 'primary', '新宿エリア · 増員 +8名'),
+  mk(0, 14, 1, '車両点検 (RDR-0203)', 'warning'),
+  mk(1, 10, 3, '新規加盟店オンボーディング', 'success', 'Curry Lab'),
+  mk(1, 15, 1, '配達員研修', 'secondary'),
+  mk(2, 8, 1, 'レンタカー清掃 (CAR-042)'),
+  mk(2, 13, 2, 'ディナー枠拡張', 'primary'),
+  mk(3, 10, 1, '月次メニュー会議', 'error', '加盟店向け'),
+  mk(5, 9, 4, '週末キャンペーン準備', 'info'),
 ];
 
 /**

@@ -1,9 +1,9 @@
 {
-  "name": "aeros-design-system",
+  "name": "bento-design-system",
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "description": "MUI v9互換API設計のデザインシステム。Storybook v10、Vite、React 18+、TypeScript。",
+  "description": "フードデリバリー / モビリティ向け MUI v9 互換 API デザインシステム。Storybook v10、Vite、React 18+、TypeScript。",
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",

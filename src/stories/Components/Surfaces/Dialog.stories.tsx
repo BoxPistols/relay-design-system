@@ -14,10 +14,10 @@ export const Default: StoryObj = {
       <>
         <Button variant="outlined" onClick={() => setOpen(true)}>Open Dialog</Button>
         <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
-          <DialogTitle>機体の削除</DialogTitle>
+          <DialogTitle>注文のキャンセル</DialogTitle>
           <DialogContent>
             <Typography variant="body2" color="secondary">
-              この操作は取り消せません。対象の機体と関連するフライト履歴が完全に削除されます。
+              この操作は取り消せません。対象の注文と関連する配達履歴・決済レコードが完全に削除されます。
             </Typography>
           </DialogContent>
           <DialogActions>

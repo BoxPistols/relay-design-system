@@ -34,10 +34,10 @@ function OverlayDemo() {
         <Tooltip title="ツールチップ"><Button variant="outlined">Hover for Tooltip</Button></Tooltip>
       </div>
       <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)} maxWidth="sm" fullWidth>
-        <DialogTitle>機体の削除</DialogTitle>
+        <DialogTitle>注文のキャンセル</DialogTitle>
         <DialogContent>
           <Typography variant="body2" color="secondary">
-            この操作は取り消せません。対象の機体と関連するフライト履歴が完全に削除されます。
+            この操作は取り消せません。対象の注文と関連する配達履歴・決済レコードが完全に削除されます。
           </Typography>
         </DialogContent>
         <DialogActions>
@@ -164,7 +164,7 @@ export const FoundationsPage: React.FC = () => {
 
       <Section title="Form Controls">
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: 16, marginBottom: 16 }}>
-          <TextField label="機体ID" placeholder="DRN-0000"/>
+          <TextField label="注文 ID" placeholder="ORD-00000"/>
           <TextField label="Email" type="email" helperText="通知先メールアドレス"/>
           <TextField label="Password" type="password" error helperText="8文字以上"/>
           <TextField label="検索" slotProps={{ input: { startAdornment: <Icons.Search fontSize="small"/> } }}/>
@@ -175,9 +175,9 @@ export const FoundationsPage: React.FC = () => {
         <Row>
           <div style={{ width: 200 }}>
             <Select label="ステータス" defaultValue="active">
-              <MenuItem value="active">稼働中</MenuItem>
-              <MenuItem value="maintenance">整備中</MenuItem>
-              <MenuItem value="idle">待機</MenuItem>
+              <MenuItem value="active">配達中</MenuItem>
+              <MenuItem value="maintenance">調理中</MenuItem>
+              <MenuItem value="idle">受付済</MenuItem>
             </Select>
           </div>
           <FormControlLabel control={<Switch defaultChecked/>} label="通知を受け取る"/>
@@ -192,10 +192,10 @@ export const FoundationsPage: React.FC = () => {
 
       <Section title="Feedback">
         <Stack spacing={1.5}>
-          <Alert severity="success">整備が完了しました。機体は再稼働可能です。</Alert>
-          <Alert severity="info">新しいファームウェアが利用可能です。</Alert>
-          <Alert severity="warning">バッテリー残量が30%を下回っています。</Alert>
-          <Alert severity="error" onClose={() => {}}>通信が切断されました。接続を確認してください。</Alert>
+          <Alert severity="success">配達が完了しました。支払いも確定しています。</Alert>
+          <Alert severity="info">新メニューが公開可能です。</Alert>
+          <Alert severity="warning">配達員バッテリー残量が 30% を下回っています。</Alert>
+          <Alert severity="error" onClose={() => {}}>配達員との通信が切断されました。接続を確認してください。</Alert>
           <Alert severity="success" variant="outlined">Outlined variant</Alert>
           <Alert severity="info" variant="filled">Filled variant</Alert>
         </Stack>
@@ -233,15 +233,15 @@ export const FoundationsPage: React.FC = () => {
         <Row>
           <Breadcrumbs>
             <Link href="#">Home</Link>
-            <Link href="#">Fleet</Link>
-            <Typography variant="body2" color="secondary">DRN-0042</Typography>
+            <Link href="#">Orders</Link>
+            <Typography variant="body2" color="secondary">ORD-20426</Typography>
           </Breadcrumbs>
         </Row>
         <div style={{ marginBottom: 16, maxWidth: 480 }}>
           <Tabs value={0} onChange={() => {}}>
             <Tab label="概要"/>
-            <Tab label="機体"/>
-            <Tab label="パイロット"/>
+            <Tab label="注文"/>
+            <Tab label="配達員"/>
             <Tab label="ログ"/>
           </Tabs>
         </div>
@@ -297,25 +297,25 @@ export const FoundationsPage: React.FC = () => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell variant="head">機体ID</TableCell>
-                <TableCell variant="head">モデル</TableCell>
+                <TableCell variant="head">注文 ID</TableCell>
+                <TableCell variant="head">店舗</TableCell>
                 <TableCell variant="head">ステータス</TableCell>
-                <TableCell variant="head" align="right">バッテリー</TableCell>
+                <TableCell variant="head" align="right">合計</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {[
-                { id: 'DRN-0042', model: 'Scout-X3', s: 'active', bat: 87 },
-                { id: 'DRN-0118', model: 'Cargo-P1', s: 'active', bat: 62 },
-                { id: 'DRN-0203', model: 'Scout-X3', s: 'maintenance', bat: 0 },
+                { id: 'ORD-20426', store: 'Bistro MARU', s: 'active', amount: 2480 },
+                { id: 'ORD-20427', store: 'Curry Lab', s: 'active', amount: 1680 },
+                { id: 'ORD-20428', store: 'Sushi Tora', s: 'maintenance', amount: 4200 },
               ].map((r) => (
                 <TableRow key={r.id} hover>
                   <TableCell sx={{ fontFamily: fonts.mono, fontSize: 13 }}>{r.id}</TableCell>
-                  <TableCell>{r.model}</TableCell>
+                  <TableCell>{r.store}</TableCell>
                   <TableCell>
-                    <Chip size="small" label={r.s === 'active' ? '稼働' : '整備'} color={r.s === 'active' ? 'success' : 'warning'}/>
+                    <Chip size="small" label={r.s === 'active' ? '配達中' : '調理中'} color={r.s === 'active' ? 'success' : 'warning'}/>
                   </TableCell>
-                  <TableCell align="right">{r.bat > 0 ? `${r.bat}%` : '—'}</TableCell>
+                  <TableCell align="right">¥{r.amount.toLocaleString()}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

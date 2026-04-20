@@ -66,7 +66,7 @@ export const StorybookPage: React.FC = () => {
         label: { control: 'text' }, disabled: { control: 'boolean' },
       },
       render: (args: any) => <Button {...args}>{args.label}</Button>,
-      code: "import { Button } from 'aeros-design-system';\nimport { defineMeta } from '@storybook/react-vite';\n\nconst meta = defineMeta({ title: 'Inputs/Button', component: Button });\nexport default meta;\n\nexport const Primary = meta.story({\n  args: { variant: 'contained', color: 'primary', children: 'Primary' },\n});",
+      code: "import { Button } from 'bento-design-system';\nimport { defineMeta } from '@storybook/react-vite';\n\nconst meta = defineMeta({ title: 'Inputs/Button', component: Button });\nexport default meta;\n\nexport const Primary = meta.story({\n  args: { variant: 'contained', color: 'primary', children: 'Primary' },\n});",
     },
     'button-secondary': {
       title: 'Inputs / Button', name: 'Secondary',
@@ -100,13 +100,13 @@ export const StorybookPage: React.FC = () => {
     },
     'tf-basic': {
       title: 'Inputs / TextField', name: 'Basic',
-      args: { label: '機体ID', placeholder: 'DRN-0000', helperText: '', error: false, disabled: false },
+      args: { label: '注文 ID', placeholder: 'ORD-00000', helperText: '', error: false, disabled: false },
       argTypes: {
         label: { control: 'text' }, placeholder: { control: 'text' },
         helperText: { control: 'text' }, error: { control: 'boolean' }, disabled: { control: 'boolean' },
       },
       render: (args: any) => <div style={{ width: 280 }}><TextField {...args}/></div>,
-      code: "export const Basic = meta.story({\n  args: { label: '機体ID', placeholder: 'DRN-0000' },\n});",
+      code: "export const Basic = meta.story({\n  args: { label: '注文 ID', placeholder: 'ORD-00000' },\n});",
     },
     'tf-adornment': {
       title: 'Inputs / TextField', name: 'WithAdornment',
@@ -122,7 +122,7 @@ export const StorybookPage: React.FC = () => {
         max: { control: 'number' }, step: { control: 'number' },
       },
       render: (args: any) => <div style={{ width: 220 }}><NumberField {...args}/></div>,
-      code: "// ★ MUI v9 新規\n// 本番: import { NumberField } from '@mui/material/NumberField';\nimport { NumberField } from 'aeros-design-system';\n\nexport const Basic = meta.story({\n  args: { label: '数量', defaultValue: 1, min: 0, max: 99 },\n});",
+      code: "// ★ MUI v9 新規\n// 本番: import { NumberField } from '@mui/material/NumberField';\nimport { NumberField } from 'bento-design-system';\n\nexport const Basic = meta.story({\n  args: { label: '数量', defaultValue: 1, min: 0, max: 99 },\n});",
     },
     'nf-currency': {
       title: 'Inputs / NumberField', name: 'Currency',
@@ -152,7 +152,7 @@ export const StorybookPage: React.FC = () => {
           </MenubarMenu>
         </Menubar>
       ),
-      code: "// ★ MUI v9 新規\nimport { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from 'aeros-design-system';\n\nexport const Basic = meta.story({\n  render: () => (\n    <Menubar>\n      <MenubarMenu>\n        <MenubarTrigger>ファイル</MenubarTrigger>\n        <MenubarContent>\n          <MenubarItem>新規作成</MenubarItem>\n        </MenubarContent>\n      </MenubarMenu>\n    </Menubar>\n  ),\n});",
+      code: "// ★ MUI v9 新規\nimport { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem } from 'bento-design-system';\n\nexport const Basic = meta.story({\n  render: () => (\n    <Menubar>\n      <MenubarMenu>\n        <MenubarTrigger>ファイル</MenubarTrigger>\n        <MenubarContent>\n          <MenubarItem>新規作成</MenubarItem>\n        </MenubarContent>\n      </MenubarMenu>\n    </Menubar>\n  ),\n});",
     },
     'mb-submenu': {
       title: 'Navigation / Menubar', name: 'WithSubmenu',
@@ -177,8 +177,8 @@ export const StorybookPage: React.FC = () => {
       title: 'Navigation / Tabs', name: 'Default',
       args: { activeTab: 0 },
       argTypes: { activeTab: { control: 'inline-radio', options: [0, 1, 2] } },
-      render: (args: any) => <div style={{ width: 400 }}><Tabs value={args.activeTab} onChange={() => {}}><Tab label="概要"/><Tab label="機体"/><Tab label="ログ"/></Tabs></div>,
-      code: "export const Default = meta.story({\n  render: () => (\n    <Tabs value={0}>\n      <Tab label=\"概要\" />\n      <Tab label=\"機体\" />\n      <Tab label=\"ログ\" />\n    </Tabs>\n  ),\n});",
+      render: (args: any) => <div style={{ width: 400 }}><Tabs value={args.activeTab} onChange={() => {}}><Tab label="概要"/><Tab label="注文"/><Tab label="ログ"/></Tabs></div>,
+      code: "export const Default = meta.story({\n  render: () => (\n    <Tabs value={0}>\n      <Tab label=\"概要\" />\n      <Tab label=\"注文\" />\n      <Tab label=\"ログ\" />\n    </Tabs>\n  ),\n});",
     },
     'alert': {
       title: 'Feedback / Alert', name: 'AllSeverities',
@@ -186,9 +186,9 @@ export const StorybookPage: React.FC = () => {
       argTypes: { variant: { control: 'inline-radio', options: ['standard', 'filled', 'outlined'] } },
       render: (args: any) => (
         <Stack spacing={1} sx={{ width: 360 }}>
-          <Alert severity="success" variant={args.variant}>整備が完了しました</Alert>
-          <Alert severity="info" variant={args.variant}>新しいファームウェア</Alert>
-          <Alert severity="warning" variant={args.variant}>バッテリー残量低下</Alert>
+          <Alert severity="success" variant={args.variant}>配達完了しました</Alert>
+          <Alert severity="info" variant={args.variant}>新メニュー公開</Alert>
+          <Alert severity="warning" variant={args.variant}>配達員バッテリー残量低下</Alert>
           <Alert severity="error" variant={args.variant}>通信切断</Alert>
         </Stack>
       ),
@@ -222,7 +222,7 @@ export const StorybookPage: React.FC = () => {
           ))}
         </div>
       ),
-      code: "import { primitive } from 'aeros-design-system';\n\nexport const Palette = meta.story({\n  render: () => <ColorSwatchGrid colors={primitive.teal} />,\n});",
+      code: "import { primitive } from 'bento-design-system';\n\nexport const Palette = meta.story({\n  render: () => <ColorSwatchGrid colors={primitive.teal} />,\n});",
     },
     'typography': {
       title: 'Foundations / Typography', name: 'Scale', args: {}, argTypes: {},

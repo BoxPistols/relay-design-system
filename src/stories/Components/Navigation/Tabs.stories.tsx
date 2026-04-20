@@ -12,8 +12,8 @@ export const Default: StoryObj = {
       <div style={{ width: 480 }}>
         <Tabs value={v} onChange={(_, n) => setV(n)}>
           <Tab label="概要"/>
-          <Tab label="機体"/>
-          <Tab label="パイロット"/>
+          <Tab label="注文"/>
+          <Tab label="配達員"/>
           <Tab label="ログ"/>
         </Tabs>
       </div>

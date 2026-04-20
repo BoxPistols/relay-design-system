@@ -95,3 +95,16 @@ export const Reply = make(<><polyline points="9 17 4 12 9 7"/><path d="M20 18v-2
 export const Schedule = make(<><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></>);
 export const AccessAlarm = make(<><circle cx="12" cy="13" r="8"/><polyline points="12 9 12 13 15 15"/><path d="M5 3 2 6"/><path d="M22 6l-3-3"/></>);
 export const Person = make(<><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></>);
+
+// ---- フードデリバリー / モビリティ系 (v9 ピボット後のコンテキスト)
+export const Restaurant = make(<><path d="M11 2v7c0 1.5-1 3-3 3s-3-1.5-3-3V2"/><line x1="8" y1="2" x2="8" y2="22"/><path d="M21 15V2l-3 3v6c0 2 1 4 3 4v7"/></>);
+export const DeliveryDining = make(<><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6"/><path d="M15 17V8h3l3 5"/><path d="M3 10h6l3 7"/></>);
+export const Moped = make(<><circle cx="6" cy="17" r="3"/><circle cx="18" cy="17" r="3"/><path d="M9 17h6"/><path d="M18 17V9h-4l-2-3H6"/><path d="M14 6h5"/></>);
+export const LocalDining = make(<><path d="M3 2v7a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2V2"/><line x1="6" y1="11" x2="6" y2="22"/><path d="M18 2c-2 0-4 3-4 6s2 3 2 3v11"/></>);
+export const Store = make(<><path d="M3 9l2-6h14l2 6"/><path d="M3 9h18v11a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 9c0 1.5 1 3 3 3s3-1.5 3-3 1 3 3 3 3-1.5 3-3 1 3 3 3 3-1.5 3-3"/></>);
+export const ShoppingBag = make(<><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></>);
+export const ReceiptLong = make(<><path d="M5 3h14v18l-2-2-2 2-2-2-2 2-2-2-2 2-2-2z"/><line x1="8" y1="8" x2="16" y2="8"/><line x1="8" y1="12" x2="16" y2="12"/><line x1="8" y1="16" x2="13" y2="16"/></>);
+export const DirectionsCar = make(<><path d="M5 17h14"/><path d="M3 13l2-6h14l2 6v5a1 1 0 0 1-1 1h-2a1 1 0 0 1-1-1v-1H7v1a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><circle cx="7" cy="15" r="1"/><circle cx="17" cy="15" r="1"/></>);
+export const Payments = make(<><rect x="2" y="7" width="20" height="12" rx="1"/><circle cx="12" cy="13" r="2.5"/><line x1="6" y1="13" x2="6" y2="13.01"/><line x1="18" y1="13" x2="18" y2="13.01"/></>);
+export const Inventory = make(<><path d="M21 8v12a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V8"/><rect x="1" y="3" width="22" height="5" rx="1"/><line x1="10" y1="12" x2="14" y2="12"/></>);
+export const Kitchen = make(<><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="8" y1="5" x2="8" y2="7"/><line x1="8" y1="13" x2="8" y2="17"/></>);

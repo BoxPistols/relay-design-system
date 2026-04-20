@@ -22,23 +22,23 @@ const mkEvent = (dayOffset: number, h: number, dur: number, title: string, color
   return { id: `${dayOffset}-${h}-${title}`, title, start: s, end: e, color, description };
 };
 const demoEvents: ScheduleEvent[] = [
-  mkEvent(0, 9, 1, '朝会', 'info'),
-  mkEvent(0, 11, 2, 'D-001 フライト', 'primary', '大手町 → 羽田'),
-  mkEvent(0, 14, 1, '機体点検', 'warning'),
-  mkEvent(1, 10, 3, 'D-003 長距離ミッション', 'success'),
-  mkEvent(2, 13, 2, 'D-007 撮影案件', 'primary'),
-  mkEvent(3, 10, 1, '整備検査', 'error'),
+  mkEvent(0, 9, 1, '朝礼 / 配達員ブリーフィング', 'info'),
+  mkEvent(0, 11, 2, 'ランチピーク枠', 'primary', '新宿エリア · 増員 +8名'),
+  mkEvent(0, 14, 1, '車両点検 (RDR-0203)', 'warning'),
+  mkEvent(1, 10, 3, '新規加盟店オンボーディング', 'success', 'Curry Lab'),
+  mkEvent(2, 13, 2, 'ディナー枠拡張', 'primary'),
+  mkEvent(3, 10, 1, '月次レビュー', 'error'),
 ];
 
 export const V9NewPage: React.FC = () => {
   const t = useTokens();
   const [qty, setQty] = useState(1);
-  const [altitude, setAltitude] = useState(120);
+  const [distance, setDistance] = useState(3);
   const [activeStep, setActiveStep] = useState(1);
   const [chatMsgs, setChatMsgs] = useState<{ id: number; v: 'sent'|'received'|'system'; text: string; ts?: string; status?: 'sent'|'delivered'|'read' }[]>([
-    { id: 1, v: 'received', text: 'おはようございます。本日のフライト計画確認お願いします。', ts: '09:12' },
-    { id: 2, v: 'sent', text: '承知しました。気象データも確認済みです。', ts: '09:15', status: 'read' },
-    { id: 3, v: 'received', text: 'ありがとうございます ✨', ts: '09:16' },
+    { id: 1, v: 'received', text: 'こんにちは。注文 ORD-20426 の配達状況を教えていただけますか？', ts: '12:32' },
+    { id: 2, v: 'sent', text: 'いま配達員が店舗を出発したところです。到着まで約 8 分です。', ts: '12:33', status: 'read' },
+    { id: 3, v: 'received', text: 'ありがとうございます ✨', ts: '12:34' },
   ]);
 
   return (
@@ -69,7 +69,7 @@ export const V9NewPage: React.FC = () => {
             <CardContent>
               <Typography variant="overline" color="secondary">Basic</Typography>
               <div style={{ marginTop: 12 }}>
-                <NumberField label="機体数" value={qty} onValueChange={setQty} min={0} max={99}/>
+                <NumberField label="注文数" value={qty} onValueChange={setQty} min={0} max={99}/>
               </div>
               <Typography variant="caption" color="secondary" sx={{ marginTop: 8, display: 'block', fontFamily: fonts.mono }}>
                 value: {qty}
@@ -80,10 +80,10 @@ export const V9NewPage: React.FC = () => {
             <CardContent>
               <Typography variant="overline" color="secondary">Step &amp; Range</Typography>
               <div style={{ marginTop: 12 }}>
-                <NumberField label="飛行高度 (m)" value={altitude} onValueChange={setAltitude} min={0} max={500} step={10}/>
+                <NumberField label="配達距離 (km)" value={distance} onValueChange={setDistance} min={0} max={20} step={1}/>
               </div>
               <Typography variant="caption" color="secondary" sx={{ marginTop: 8, display: 'block' }}>
-                0〜500m / 10m刻み · ↑↓ キー操作可
+                0〜20km / 1km刻み · ↑↓ キー操作可
               </Typography>
             </CardContent>
           </Card>
@@ -132,9 +132,9 @@ export const V9NewPage: React.FC = () => {
                 <MenubarItem shortcut="⌘O">開く…</MenubarItem>
                 <MenubarSeparator/>
                 <MenubarSubmenu label="最近使った項目">
-                  <MenubarItem>flight-plan-042.json</MenubarItem>
-                  <MenubarItem>mission-brief.pdf</MenubarItem>
-                  <MenubarItem>telemetry-2026-04.csv</MenubarItem>
+                  <MenubarItem>orders-2026-04-20.json</MenubarItem>
+                  <MenubarItem>menu-shibuya.pdf</MenubarItem>
+                  <MenubarItem>delivery-log-2026-04.csv</MenubarItem>
                 </MenubarSubmenu>
                 <MenubarSubmenu label="エクスポート">
                   <MenubarItem>PDF (.pdf)</MenubarItem>
@@ -164,9 +164,9 @@ export const V9NewPage: React.FC = () => {
                 <MenubarItem>ハイブリッド</MenubarItem>
                 <MenubarSeparator/>
                 <MenubarSubmenu label="レイヤー">
-                  <MenubarItem>空域情報</MenubarItem>
-                  <MenubarItem>気象</MenubarItem>
-                  <MenubarItem>NOTAM</MenubarItem>
+                  <MenubarItem>配達エリア</MenubarItem>
+                  <MenubarItem>需要ヒートマップ</MenubarItem>
+                  <MenubarItem>天候情報</MenubarItem>
                 </MenubarSubmenu>
               </MenubarContent>
             </MenubarMenu>
@@ -200,10 +200,10 @@ export const V9NewPage: React.FC = () => {
         </Typography>
         <Card sx={{ padding: 32, marginBottom: 16 }}>
           <Stepper activeStep={activeStep}>
-            <Step><StepLabel>機体選択</StepLabel></Step>
-            <Step><StepLabel optional="任意">ミッション計画</StepLabel></Step>
-            <Step><StepLabel>安全確認</StepLabel></Step>
-            <Step><StepLabel>申請</StepLabel></Step>
+            <Step><StepLabel>店舗選択</StepLabel></Step>
+            <Step><StepLabel optional="任意">メニュー・オプション</StepLabel></Step>
+            <Step><StepLabel>お届け先・時間</StepLabel></Step>
+            <Step><StepLabel>決済</StepLabel></Step>
           </Stepper>
           <Stack direction="row" spacing={1} justifyContent="center" sx={{ marginTop: 24 }}>
             <Button variant="outlined" size="small"
@@ -217,10 +217,10 @@ export const V9NewPage: React.FC = () => {
         <Card sx={{ padding: 32 }}>
           <Typography variant="overline" color="secondary" sx={{ display: 'block', marginBottom: 12 }}>alternativeLabel</Typography>
           <Stepper activeStep={2} alternativeLabel>
-            <Step><StepLabel>受付</StepLabel></Step>
-            <Step><StepLabel>整備</StepLabel></Step>
-            <Step><StepLabel>検査</StepLabel></Step>
-            <Step><StepLabel>完了</StepLabel></Step>
+            <Step><StepLabel>受注</StepLabel></Step>
+            <Step><StepLabel>調理中</StepLabel></Step>
+            <Step><StepLabel>配達中</StepLabel></Step>
+            <Step><StepLabel>配達完了</StepLabel></Step>
           </Stepper>
         </Card>
       </section>
@@ -243,17 +243,17 @@ export const V9NewPage: React.FC = () => {
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(420px, 1fr))', gap: 24 }}>
           <Card sx={{ padding: 0, overflow: 'hidden' }}>
             <CardContent sx={{ padding: 16 }}>
-              <Typography variant="overline" color="secondary">運航管制チャット</Typography>
+              <Typography variant="overline" color="secondary">顧客サポートチャット</Typography>
             </CardContent>
             <div style={{ padding: 16, paddingTop: 0 }}>
               <Chat height={420}>
                 <ChatHeader
                   avatar={<Avatar size={36}>田</Avatar>}
-                  title="田中 恵" subtitle="運航管制" status="online"
+                  title="田中 恵 (ORD-20426)" subtitle="カスタマーサポート" status="online"
                   actions={<IconButton size="small"><Icons.Videocam fontSize="small"/></IconButton>}
                 />
                 <ChatList>
-                  <ChatMessage variant="system">通話開始 · 09:10</ChatMessage>
+                  <ChatMessage variant="system">チャット開始 · 12:30</ChatMessage>
                   {chatMsgs.map(m => (
                     <ChatMessage key={m.id} variant={m.v} timestamp={m.ts} status={m.status}
                       avatar={m.v === 'received' ? <Avatar size={28}>田</Avatar> : undefined}>
@@ -262,7 +262,7 @@ export const V9NewPage: React.FC = () => {
                   ))}
                 </ChatList>
                 <ChatComposer
-                  suggestions={['気象確認', 'NOTAM確認', '機体ステータス']}
+                  suggestions={['配達状況を確認', '配達員に連絡', 'キャンセル']}
                   onSend={(text) => setChatMsgs(prev => [
                     ...prev,
                     { id: Date.now(), v: 'sent', text, ts: 'now', status: 'sent' },
@@ -273,22 +273,22 @@ export const V9NewPage: React.FC = () => {
           </Card>
           <Card sx={{ padding: 0, overflow: 'hidden' }}>
             <CardContent sx={{ padding: 16 }}>
-              <Typography variant="overline" color="secondary">AI Copilot</Typography>
+              <Typography variant="overline" color="secondary">AI 注文アシスタント</Typography>
             </CardContent>
             <div style={{ padding: 16, paddingTop: 0 }}>
               <Chat height={420}>
-                <ChatHeader avatar={<ChatAIAvatar/>} title="Aeros Copilot" subtitle="AI アシスタント" status="online"/>
+                <ChatHeader avatar={<ChatAIAvatar/>} title="Bento Copilot" subtitle="AI アシスタント" status="online"/>
                 <ChatList>
                   <ChatMessage variant="received" avatar={<ChatAIAvatar size={28}/>}>
-                    本日の飛行計画を提案しますか？
+                    いつもの「ランチ B セット」で注文しますか？
                   </ChatMessage>
-                  <ChatMessage variant="sent" timestamp="10:02" status="read">
-                    羽田 → 成田で計画してください。
+                  <ChatMessage variant="sent" timestamp="12:02" status="read">
+                    はい、サラダを L にしてください。
                   </ChatMessage>
                   <ChatMessage variant="received" avatar={<ChatAIAvatar size={28}/>} reactions={['✨']}>
-                    了解です。NOTAM・風速・空域混雑を確認中です。
+                    承知しました。配達予想は 20 分後、到着は 12:25 ごろです。
                   </ChatMessage>
-                  <ChatTypingIndicator author="Aeros Copilot"/>
+                  <ChatTypingIndicator author="Bento Copilot"/>
                 </ChatList>
                 <ChatComposer/>
               </Chat>

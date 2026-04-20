@@ -23,13 +23,13 @@ type Story = StoryObj<typeof DateField>;
  * - `slotProps.input` / `slotProps.popper` / `slotProps.day` 対応
  */
 export const Basic: Story = {
-  args: { label: '飛行予定日', defaultValue: new Date() },
+  args: { label: '配達希望日', defaultValue: new Date() },
 };
 
 export const WithRange: Story = {
   render: (args) => (
     <DateField {...args}
-      label="次回整備" defaultValue={new Date()}
+      label="配車予約日" defaultValue={new Date()}
       minDate={new Date()}
       maxDate={(() => { const d = new Date(); d.setMonth(d.getMonth() + 3); return d; })()}
     />

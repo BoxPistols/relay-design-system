@@ -11,11 +11,12 @@ export const MapPage: React.FC = () => {
   const { mode } = useTheme();
   const [selected, setSelected] = useState(2);
 
+  // 配達員の現在位置 (ピン)
   const pins = [
-    { id: 1, x: 32, y: 42, label: 'DRN-0042', status: 'active' },
-    { id: 2, x: 58, y: 28, label: 'DRN-0118', status: 'active' },
-    { id: 3, x: 72, y: 58, label: 'DRN-0312', status: 'warning' },
-    { id: 4, x: 45, y: 72, label: 'DRN-0277', status: 'idle' },
+    { id: 1, x: 32, y: 42, label: 'RDR-0042', status: 'active' },
+    { id: 2, x: 58, y: 28, label: 'RDR-0118', status: 'active' },
+    { id: 3, x: 72, y: 58, label: 'RDR-0312', status: 'warning' },
+    { id: 4, x: 45, y: 72, label: 'RDR-0277', status: 'idle' },
   ];
   const pinColor = (s: string) => s === 'active' ? t.brand.main : s === 'warning' ? t.warning.main : t.text.muted;
 
@@ -44,6 +45,7 @@ export const MapPage: React.FC = () => {
         {[...Array(9)].map((_, i) => (
           <line key={i} x1="0" y1={80 * i + 30} x2="1000" y2={80 * i + 80} stroke={roadMinor} strokeWidth="1" opacity="0.6"/>
         ))}
+        {/* 配達ルート (店舗 → 配達員 → 配達先) */}
         <path d="M 320 294 Q 450 200 580 196 Q 680 250 720 406"
           stroke={t.brand.main} strokeWidth="2.5" fill="none" strokeDasharray="6 4" opacity="0.8"/>
       </svg>
@@ -69,7 +71,7 @@ export const MapPage: React.FC = () => {
             display: 'grid', placeItems: 'center',
             border: `3px solid ${t.bg.surface}`,
           }}>
-            <Icons.FlightTakeoff fontSize="small" sx={{ transform: 'rotate(45deg)', color: t.text.onBrand }}/>
+            <Icons.DeliveryDining fontSize="small" sx={{ transform: 'rotate(45deg)', color: t.text.onBrand, width: 16, height: 16 }}/>
           </div>
         </div>
       ))}
@@ -82,7 +84,7 @@ export const MapPage: React.FC = () => {
       }}>
         <IconButton size="small"><Icons.Layers/></IconButton>
         <div style={{ flex: 1 }}>
-          <TextField fullWidth placeholder="エリア・機体を検索"
+          <TextField fullWidth placeholder="エリア・配達員・店舗を検索"
             slotProps={{ input: { startAdornment: <Icons.Search fontSize="small"/> } }}/>
         </div>
         <IconButton size="small" sx={{ backgroundColor: t.brand.main, color: t.text.onBrand }}>
@@ -115,16 +117,16 @@ export const MapPage: React.FC = () => {
                   animation: 'map-blink 1.4s infinite',
                 }}/>
               </Stack>
-              <Typography variant="h5" sx={{ fontFamily: fonts.mono }}>DRN-0118</Typography>
-              <Typography variant="body2" color="secondary">Cargo-P1 · 羽田エリア</Typography>
+              <Typography variant="h5" sx={{ fontFamily: fonts.mono }}>RDR-0118</Typography>
+              <Typography variant="body2" color="secondary">佐藤 美咲 · 新宿エリア · Curry Lab 配達中</Typography>
             </div>
             <IconButton size="small"><Icons.MoreVert/></IconButton>
           </Stack>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 10, marginBottom: 16 }}>
             {[
-              { icon: <Icons.Battery/>, label: '62%', sub: 'バッテリー' },
-              { icon: <Icons.LocationOn/>, label: '120m', sub: '高度' },
-              { icon: <Icons.AccessTime/>, label: '18分', sub: '飛行時間' },
+              { icon: <Icons.Moped/>, label: '62%', sub: 'バッテリー' },
+              { icon: <Icons.LocationOn/>, label: '1.2km', sub: '配達先まで' },
+              { icon: <Icons.AccessTime/>, label: '8分', sub: '到着予定' },
             ].map((s, i) => (
               <div key={i} style={{ padding: 12, borderRadius: 8, backgroundColor: t.bg.sunken, textAlign: 'center' }}>
                 <div style={{ color: t.text.muted, marginBottom: 4 }}>
@@ -136,8 +138,8 @@ export const MapPage: React.FC = () => {
             ))}
           </div>
           <Stack direction="row" spacing={1}>
-            <Button fullWidth variant="contained">詳細を見る</Button>
-            <Button variant="outlined">追跡</Button>
+            <Button fullWidth variant="contained">注文を開く</Button>
+            <Button variant="outlined">連絡</Button>
           </Stack>
         </div>
       </Paper>

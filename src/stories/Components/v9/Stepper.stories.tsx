@@ -14,10 +14,10 @@ export const Horizontal: StoryObj = {
     return (
       <div style={{ width: 560, padding: 20 }}>
         <Stepper activeStep={active}>
-          <Step><StepLabel>機体選択</StepLabel></Step>
-          <Step><StepLabel optional="任意">ミッション計画</StepLabel></Step>
-          <Step><StepLabel>安全確認</StepLabel></Step>
-          <Step><StepLabel>申請</StepLabel></Step>
+          <Step><StepLabel>店舗選択</StepLabel></Step>
+          <Step><StepLabel optional="任意">メニュー・オプション</StepLabel></Step>
+          <Step><StepLabel>お届け先・時間</StepLabel></Step>
+          <Step><StepLabel>決済</StepLabel></Step>
         </Stepper>
         <Stack direction="row" spacing={1} justifyContent="center" sx={{ marginTop: 24 }}>
           <Button variant="outlined" size="small" disabled={active === 0}
@@ -34,10 +34,10 @@ export const AlternativeLabel: StoryObj = {
   render: () => (
     <div style={{ width: 560, padding: 20 }}>
       <Stepper activeStep={2} alternativeLabel>
-        <Step><StepLabel>受付</StepLabel></Step>
-        <Step><StepLabel>整備</StepLabel></Step>
-        <Step><StepLabel>検査</StepLabel></Step>
-        <Step><StepLabel>完了</StepLabel></Step>
+        <Step><StepLabel>受注</StepLabel></Step>
+        <Step><StepLabel>調理中</StepLabel></Step>
+        <Step><StepLabel>配達中</StepLabel></Step>
+        <Step><StepLabel>配達完了</StepLabel></Step>
       </Stepper>
     </div>
   ),

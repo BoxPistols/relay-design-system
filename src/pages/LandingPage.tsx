@@ -16,9 +16,9 @@ export const LandingPage: React.FC = () => {
         <Toolbar sx={{ maxWidth: 1200, width: '100%', margin: '0 auto' }}>
           <Stack direction="row" spacing={1} alignItems="center">
             <div style={{ width: 24, height: 24, borderRadius: 6, backgroundColor: t.brand.main, display: 'grid', placeItems: 'center' }}>
-              <Icons.FlightTakeoff fontSize="small" sx={{ color: t.text.onBrand, width: 14, height: 14 }}/>
+              <Icons.DeliveryDining fontSize="small" sx={{ color: t.text.onBrand, width: 14, height: 14 }}/>
             </div>
-            <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Aeros</Typography>
+            <Typography variant="subtitle2" sx={{ fontWeight: 700 }}>Bento</Typography>
           </Stack>
           <Stack direction="row" spacing={3} sx={{ marginLeft: 40 }}>
             {['プロダクト', 'ソリューション', '料金', 'ドキュメント'].map((x) => (
@@ -39,14 +39,15 @@ export const LandingPage: React.FC = () => {
         }}/>
         <div style={{ position: 'relative', maxWidth: 1200, margin: '0 auto' }}>
           <Stack spacing={3} sx={{ maxWidth: 820, margin: '0 auto', textAlign: 'center' }}>
-            <Chip size="small" color="primary" label="AIアシスト運航 ベータ公開"
+            <Chip size="small" color="primary" label="AI 配車最適化 ベータ公開"
               icon={<Icons.AutoAwesome fontSize="small"/>} sx={{ alignSelf: 'center' }}/>
             <Typography variant="h1" sx={{ fontSize: 'clamp(2.5rem, 6vw, 5rem)' }}>
-              空を、<em style={{ fontStyle: 'italic', color: t.brand.main }}>統合</em>する。
+              街を、<em style={{ fontStyle: 'italic', color: t.brand.main }}>つなぐ</em>。
             </Typography>
             <Typography variant="h6" color="secondary" sx={{ fontWeight: 400, maxWidth: 620, margin: '0 auto' }}>
-              ドローン運航の全てを1つのプラットフォームに。機体管理、フライト計画、リアルタイム監視、
-              そしてAIによる自律判断。産業用途のための次世代OS。
+              フードデリバリーとモビリティを 1 つのプラットフォームに。
+              注文管理、配達員オペレーション、予約枠管理、リアルタイム追跡。
+              ローカルサービスのための運用 OS。
             </Typography>
             <Stack direction="row" spacing={1.5} justifyContent="center" sx={{ paddingTop: 16 }}>
               <Button size="large" variant="contained" endIcon={<Icons.ArrowForward/>}>無料で始める</Button>
@@ -66,7 +67,7 @@ export const LandingPage: React.FC = () => {
               </div>
               <div style={{ aspectRatio: '16/9', backgroundColor: t.bg.canvas, display: 'flex' }}>
                 <div style={{ width: 180, borderRight: `1px solid ${t.border.subtle}`, padding: 12 }}>
-                  {[Icons.Dashboard, Icons.FlightTakeoff, Icons.Map, Icons.Insights].map((Ic, i) => (
+                  {[Icons.Dashboard, Icons.DeliveryDining, Icons.Map, Icons.Insights].map((Ic, i) => (
                     <div key={i} style={{
                       display: 'flex', alignItems: 'center', gap: 8, padding: 8, marginBottom: 4,
                       borderRadius: 6, backgroundColor: i === 0 ? t.brand.soft : 'transparent',
@@ -100,7 +101,7 @@ export const LandingPage: React.FC = () => {
           <div style={{ marginTop: 64, textAlign: 'center' }}>
             <Typography variant="overline" color="text.muted">導入企業</Typography>
             <Stack direction="row" spacing={5} justifyContent="center" flexWrap="wrap" sx={{ marginTop: 12 }}>
-              {['NIPPON LOGISTICS', 'SKY WORKS', 'TERRA SURVEY', 'AETHER', 'MERIDIAN'].map((l) => (
+              {['TOKYO EATS', 'URBAN CART', 'FLEET MOBILITY', 'KITCHEN LAB', 'MERIDIAN'].map((l) => (
                 <span key={l} style={{
                   fontFamily: fonts.mono, color: t.text.muted, fontWeight: 600,
                   fontSize: 13, letterSpacing: '0.1em',
@@ -117,17 +118,17 @@ export const LandingPage: React.FC = () => {
           <Stack spacing={2} sx={{ marginBottom: 56, maxWidth: 640 }}>
             <Typography variant="overline" color="brand">プロダクト</Typography>
             <Typography variant="h2" sx={{ fontSize: 'clamp(2rem, 5vw, 3.5rem)' }}>
-              運航の全レイヤーを、<em style={{ fontStyle: 'italic' }}>一つに</em>。
+              オペレーションの全レイヤーを、<em style={{ fontStyle: 'italic' }}>一つに</em>。
             </Typography>
           </Stack>
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 20 }}>
             {[
-              { icon: <Icons.Bolt/>, title: 'リアルタイム監視', desc: '数千機の機体を同時に追跡、50ms以下のテレメトリ更新。' },
-              { icon: <Icons.Shield/>, title: '安全性ファースト', desc: 'ISO 21384準拠、多重冗長化、自動帰還システム標準搭載。' },
-              { icon: <Icons.AutoAwesome/>, title: 'AI自律判断', desc: '天候・空域情報を統合し、最適な飛行経路を自動生成。' },
-              { icon: <Icons.Timeline/>, title: '統合ダッシュボード', desc: 'KPI、インシデント、整備計画まで一画面で把握。' },
-              { icon: <Icons.Map/>, title: '高精度マップ', desc: 'リアルタイム3D空域表示、NOTAM/METAR自動取込。' },
-              { icon: <Icons.People/>, title: 'チーム運用', desc: 'ロール別権限、監査ログ、SSO/SCIM対応。' },
+              { icon: <Icons.Bolt/>, title: 'リアルタイム配車', desc: '注文発生から 30 秒で最寄りの配達員に自動アサイン。' },
+              { icon: <Icons.Shield/>, title: '温度・衛生管理', desc: '配達中の温度ログ、食品衛生法準拠の証跡を自動保存。' },
+              { icon: <Icons.AutoAwesome/>, title: 'AI 需要予測', desc: '天候・イベント・曜日から注文数を予測し、配達員をプレポジション。' },
+              { icon: <Icons.Timeline/>, title: '統合ダッシュボード', desc: '売上・配達完遂率・クレームまで 1 画面で把握。' },
+              { icon: <Icons.Map/>, title: '配達エリア制御', desc: 'ヒートマップで需要を可視化、エリア別の稼働率を最適化。' },
+              { icon: <Icons.People/>, title: 'マルチテナント', desc: 'レストラン / 配達員 / 管理者のロール別画面、SSO/SCIM 対応。' },
             ].map((f, i) => (
               <Card key={i}>
                 <CardContent>
@@ -148,17 +149,17 @@ export const LandingPage: React.FC = () => {
       {/* Big stat */}
       <section style={{ padding: '100px 24px', backgroundColor: t.bg.sunken }}>
         <div style={{ maxWidth: 1200, margin: '0 auto', textAlign: 'center' }}>
-          <Typography variant="h1" sx={{ fontSize: 'clamp(3rem, 10vw, 7rem)', marginBottom: 8 }}>1,247,000+</Typography>
-          <Typography variant="h6" color="secondary" sx={{ fontWeight: 400 }}>累計フライト数 · 99.97% 完遂率</Typography>
+          <Typography variant="h1" sx={{ fontSize: 'clamp(3rem, 10vw, 7rem)', marginBottom: 8 }}>3,842,000+</Typography>
+          <Typography variant="h6" color="secondary" sx={{ fontWeight: 400 }}>累計配達件数 · 平均 24 分以内配達</Typography>
           <div style={{
             display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))',
             gap: 24, marginTop: 48, maxWidth: 840, margin: '48px auto 0',
           }}>
             {[
-              { value: '147+', label: '導入企業' },
-              { value: '28国', label: '対応地域' },
+              { value: '2,400+', label: '加盟店' },
+              { value: '28都市', label: '対応エリア' },
               { value: '24/7', label: 'サポート' },
-              { value: 'SOC2', label: 'コンプライアンス' },
+              { value: 'PCI-DSS', label: '決済準拠' },
             ].map((s, i) => (
               <div key={i}>
                 <Typography variant="h4" sx={{ fontFamily: fonts.display, marginBottom: 4 }}>{s.value}</Typography>
@@ -177,10 +178,10 @@ export const LandingPage: React.FC = () => {
           border: 'none', color: t.text.onBrand,
         }}>
           <Typography variant="h2" sx={{ fontSize: 'clamp(2rem, 5vw, 3rem)', color: 'inherit', marginBottom: 16 }}>
-            今すぐ、空を動かす。
+            今すぐ、街を動かす。
           </Typography>
           <Typography variant="body1" sx={{ opacity: 0.9, marginBottom: 32, maxWidth: 520, margin: '0 auto 32px' }}>
-            14日間の無料トライアル。クレジットカード不要。いつでもキャンセル可能。
+            14 日間の無料トライアル。クレジットカード不要。いつでもキャンセル可能。
           </Typography>
           <Stack direction="row" spacing={1.5} justifyContent="center">
             <Button size="large" variant="contained" sx={{ backgroundColor: t.bg.surface, color: t.text.primary }}>無料で始める</Button>

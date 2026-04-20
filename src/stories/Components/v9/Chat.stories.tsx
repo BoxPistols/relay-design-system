@@ -35,19 +35,19 @@ type Story = StoryObj<typeof Chat>;
 export const Basic: Story = {
   render: () => {
     const [msgs, setMsgs] = useState([
-      { id: 1, v: 'received' as const, text: 'おはようございます。本日のフライトログをご確認お願いします。', ts: '09:12' },
-      { id: 2, v: 'sent' as const, text: '確認しました。D-004 の異常値、気になりますね。', ts: '09:15', status: 'read' as const },
-      { id: 3, v: 'received' as const, text: '再キャリブレーションで解消予定です。', ts: '09:16' },
+      { id: 1, v: 'received' as const, text: 'こんにちは。注文 ORD-20426 の配達状況を教えてください。', ts: '12:32' },
+      { id: 2, v: 'sent' as const, text: 'いま配達員が店舗を出発しました。到着まで約 8 分です。', ts: '12:33', status: 'read' as const },
+      { id: 3, v: 'received' as const, text: '了解です、お店のおすすめも教えてもらえますか？', ts: '12:34' },
     ]);
     return (
       <Chat>
         <ChatHeader
           avatar={<Avatar size={36}>田</Avatar>}
-          title="田中 恵" subtitle="運航管制センター" status="online"
+          title="田中 恵 (ORD-20426)" subtitle="カスタマーサポート" status="online"
           actions={<IconButton size="small"><Icons.Videocam fontSize="small"/></IconButton>}
         />
         <ChatList>
-          <ChatMessage variant="system">通話開始 · 09:10</ChatMessage>
+          <ChatMessage variant="system">チャット開始 · 12:30</ChatMessage>
           {msgs.map(m => (
             <ChatMessage key={m.id} variant={m.v} timestamp={m.ts} status={m.status}
               avatar={m.v === 'received' ? <Avatar size={28}>田</Avatar> : undefined}>
@@ -64,22 +64,22 @@ export const Basic: Story = {
 export const WithTyping: Story = {
   render: () => (
     <Chat height={420}>
-      <ChatHeader avatar={<ChatAIAvatar/>} title="Aeros Copilot" subtitle="AI アシスタント" status="online"/>
+      <ChatHeader avatar={<ChatAIAvatar/>} title="Bento Copilot" subtitle="AI アシスタント" status="online"/>
       <ChatList>
         <ChatMessage variant="received" avatar={<ChatAIAvatar size={28}/>}>
-          本日の飛行計画を作成しますか？
+          いつもの「ランチ B セット」で注文しますか？
         </ChatMessage>
-        <ChatMessage variant="sent" timestamp="10:02" status="read">
-          はい、羽田→成田で。
+        <ChatMessage variant="sent" timestamp="12:02" status="read">
+          はい、サラダを L にしてください。
         </ChatMessage>
         <ChatMessage variant="received" avatar={<ChatAIAvatar size={28}/>}
           reactions={['✨']}>
-          了解しました。風速・NOTAM を確認中です。
+          承知しました。配達予想は 20 分後、到着は 12:25 ごろです。
         </ChatMessage>
-        <ChatTypingIndicator author="Aeros Copilot"/>
+        <ChatTypingIndicator author="Bento Copilot"/>
       </ChatList>
       <ChatComposer
-        suggestions={['経路を確認', '代替空港を提案', '気象を表示']}
+        suggestions={['注文内容を確認', 'おすすめを表示', '配達枠を変更']}
         onSend={() => {}}
       />
     </Chat>

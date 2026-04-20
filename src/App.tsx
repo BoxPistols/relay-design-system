@@ -27,9 +27,9 @@ const Nav: React.FC<{
         backgroundColor: mode === 'dark' ? '#3cc0a2' : '#11856e',
         display: 'grid', placeItems: 'center',
       }}>
-        <Icons.FlightTakeoff sx={{ color: '#fff', width: 13, height: 13 }}/>
+        <Icons.DeliveryDining sx={{ color: '#fff', width: 13, height: 13 }}/>
       </div>
-      <Typography variant="caption" sx={{ fontWeight: 700, fontSize: 13 }}>Aeros DS</Typography>
+      <Typography variant="caption" sx={{ fontWeight: 700, fontSize: 13 }}>Bento DS</Typography>
     </Stack>
     <ToggleButtonGroup size="small" exclusive value={page} onChange={(_: any, v: any) => v && setPage(v as Page)}>
       <ToggleButton value="foundations">Foundations</ToggleButton>
