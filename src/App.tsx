@@ -19,10 +19,16 @@ type NavCtx = {
   clearIntent: () => void;
 };
 const NavContext = createContext<NavCtx | null>(null);
+
+/**
+ * App 外 (Storybook の isolated story, unit test 等) でも破綻させないよう、
+ * Provider が無いケースでは no-op の NavCtx を返す。
+ * 本番 App 内 (AppProvider 配下) では本物のコンテキスト値が使われる。
+ */
 export const useNav = (): NavCtx => {
   const c = useContext(NavContext);
-  if (!c) throw new Error('useNav must be used inside <App>');
-  return c;
+  if (c) return c;
+  return { goto: () => {}, intent: null, clearIntent: () => {} };
 };
 
 const Nav: React.FC<{
