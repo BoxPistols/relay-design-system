@@ -61,7 +61,7 @@ export const MapPage: React.FC = () => {
               position: 'absolute', left: '50%', top: -6, transform: 'translateX(-50%)',
               width: 56, height: 56, borderRadius: '50%',
               backgroundColor: pinColor(p.status), opacity: 0.2,
-              animation: 'map-pulse 2s ease-out infinite',
+              animation: 'relay-map-pulse 2s ease-out infinite',
             }}/>
           )}
           <div style={{
@@ -75,7 +75,7 @@ export const MapPage: React.FC = () => {
           </div>
         </div>
       ))}
-      <style>{`@keyframes map-pulse { 0% { transform: translateX(-50%) scale(0.8); opacity: 0.3; } 100% { transform: translateX(-50%) scale(2); opacity: 0; } }`}</style>
+      {/* @keyframes relay-map-pulse は src/styles.css に集約 */}
 
       <Paper sx={{
         position: 'absolute', top: 16, left: 16, right: 16, padding: 8,
@@ -114,7 +114,7 @@ export const MapPage: React.FC = () => {
                 <div style={{
                   width: 6, height: 6, borderRadius: '50%',
                   backgroundColor: t.brand.main,
-                  animation: 'map-blink 1.4s infinite',
+                  animation: 'relay-map-blink 1.4s infinite',
                 }}/>
               </Stack>
               <Typography variant="h5" sx={{ fontFamily: fonts.mono }}>RDR-0118</Typography>
@@ -143,7 +143,7 @@ export const MapPage: React.FC = () => {
           </Stack>
         </div>
       </Paper>
-      <style>{`@keyframes map-blink { 50% { opacity: 0.3; } }`}</style>
+      {/* @keyframes relay-map-blink は src/styles.css に集約 */}
     </div>
   );
 };

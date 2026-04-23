@@ -1,5 +1,5 @@
 /**
- * variantsMatcher - MUI v9 の styleOverrides.variants 配列と同じセマンティクス。
+ * variantsMatcher - MUI v9 の styleOverrides.variants 配列と **ほぼ同じ** セマンティクス。
  *
  * MUI v9 ではコンポーネントのスタイルを以下のように宣言する:
  *
@@ -9,7 +9,13 @@
  *   ]
  *
  * この関数は実行時に props を受け取り、props が match する rule の style を
- * すべてマージして返す。条件は値等値 (===) または関数述語。
+ * 先頭から順にマージして返す (後勝ち)。
+ *
+ * ⚠️ **本家 MUI v9 との差異**: 本家の `variants[].props` は値等値マッチのみ。
+ * ここでは便利のため **関数述語** `(v) => boolean` も受け付ける拡張があるが、
+ * これに依存した variants は本家に移行時 silently 機能しなくなる。
+ * 本物の `@mui/material` に置き換える前に**関数述語を使っている variants は
+ * 値等値に潰すか、コンポーネント側に条件ロジックを移す**こと。
  */
 
 export type VariantRule<P = any, S = React.CSSProperties> = {

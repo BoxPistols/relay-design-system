@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect, createContext, useContext } from 'react';
+import React, { useState, useRef, useEffect, useMemo, createContext, useContext } from 'react';
 import { useTokens } from '../../theme';
+import type { TokenSet } from '../../tokens';
 import { fonts } from '../../tokens';
 import { Avatar } from '../Avatar';
 import { Typography } from '../Typography';
@@ -41,8 +42,11 @@ export const Chat: React.FC<ChatProps> = ({
 }) => {
   const t = useTokens();
   const Root = (slots?.root as any) || 'div';
+  // S2: Context value をメモ化。将来 density 以外 (ref, 送信者情報等) を入れたとき
+  // も consumer の無駄 re-render を回避できる。
+  const ctxValue = useMemo(() => ({ density }), [density]);
   return (
-    <ChatContext.Provider value={{ density }}>
+    <ChatContext.Provider value={ctxValue}>
       <Root
         role="log" aria-live="polite" aria-label="Chat conversation"
         style={{
@@ -67,7 +71,7 @@ export type ChatHeaderProps = {
   status?: 'online' | 'offline' | 'away' | 'busy';
 };
 
-const statusColor = (s?: string, t?: any) => s === 'online' ? t.success.main :
+const statusColor = (s: ChatHeaderProps['status'], t: TokenSet) => s === 'online' ? t.success.main :
   s === 'away' ? t.warning.main : s === 'busy' ? t.danger.main : t.text.muted;
 
 export const ChatHeader: React.FC<ChatHeaderProps> = ({ title, subtitle, avatar, actions, status }) => {
@@ -100,14 +104,33 @@ export const ChatHeader: React.FC<ChatHeaderProps> = ({ title, subtitle, avatar,
 };
 
 // ---- Message List ----
+/**
+ * Auto-scroll は **ユーザが底付近にいるときだけ**発火。
+ * 過去ログを読み返し中に新着で吹き飛ばされないようにする (C3 対応)。
+ * 依存配列は `children` 参照ではなく `React.Children.count()` で、親の
+ * 無関係な再レンダでは発火しない。
+ */
 export const ChatList: React.FC<{ children?: React.ReactNode; sx?: React.CSSProperties }> = ({ children, sx }) => {
   const t = useTokens();
   const ref = useRef<HTMLDivElement>(null);
+  const wasAtBottom = useRef(true);
+  const count = React.Children.count(children);
+
+  // 毎スクロールで「底付近にいるか」を記録
+  const onScroll = () => {
+    const el = ref.current;
+    if (!el) return;
+    wasAtBottom.current = el.scrollHeight - el.scrollTop - el.clientHeight < 40;
+  };
+
   useEffect(() => {
-    if (ref.current) ref.current.scrollTop = ref.current.scrollHeight;
-  }, [children]);
+    const el = ref.current;
+    if (!el) return;
+    if (wasAtBottom.current) el.scrollTop = el.scrollHeight;
+  }, [count]);
+
   return (
-    <div ref={ref} style={{
+    <div ref={ref} onScroll={onScroll} style={{
       flex: 1, overflowY: 'auto', padding: '16px', display: 'flex', flexDirection: 'column',
       gap: 8, backgroundColor: t.bg.canvas, ...sx,
     }}>{children}</div>
@@ -234,11 +257,11 @@ export const ChatTypingIndicator: React.FC<{ author?: React.ReactNode }> = ({ au
           <span key={d} style={{
             width: 6, height: 6, borderRadius: '50%',
             backgroundColor: t.text.muted,
-            animation: `aeros-typing 1.2s ${d}ms infinite ease-in-out`,
+            animation: `relay-typing 1.2s ${d}ms infinite ease-in-out`,
           }}/>
         ))}
       </div>
-      <style>{'@keyframes aeros-typing{0%,80%,100%{opacity:.3;transform:translateY(0)}40%{opacity:1;transform:translateY(-3px)}}'}</style>
+      {/* @keyframes relay-typing は src/styles.css に集約 (インスタンスごとの style 重複を避ける) */}
     </div>
   );
 };

@@ -66,9 +66,14 @@ export const DateField: React.FC<DateFieldProps> = ({
     }
   }, [open]);
 
-  const text = v
+  // C2: 入力中の生文字列は別 state で保持し、parse 成功時のみ `onChange` を呼ぶ。
+  // これで "2026" や "2026/04" と打っている途中で state が巻き戻らない。
+  // focus が外れている / 生入力なしのときは v から逆生成した表示を使う。
+  const formatted = v
     ? `${v.getFullYear()}/${pad2(v.getMonth() + 1)}/${pad2(v.getDate())}`
     : '';
+  const [rawText, setRawText] = useState<string | null>(null);
+  const text = rawText ?? formatted;
 
   return (
     <div ref={ref} style={{ position: 'relative', minWidth: 180, ...sx }}>
@@ -87,11 +92,19 @@ export const DateField: React.FC<DateFieldProps> = ({
         <input
           type="text" value={text} placeholder="YYYY/MM/DD"
           disabled={disabled}
-          onFocus={() => setFocus(true)} onBlur={() => setFocus(false)}
+          onFocus={() => setFocus(true)}
+          onBlur={() => { setFocus(false); setRawText(null); }}
           onChange={(e) => {
-            const [y, m, d] = e.target.value.split('/').map(Number);
-            if (y && m && d) set(new Date(y, m - 1, d));
-            else if (!e.target.value) set(null);
+            const next = e.target.value;
+            setRawText(next);
+            // 完全な YYYY/M/D のとき state を反映。途中入力は rawText に留めて
+            // 表示だけ反映し、外部の value は壊さない。
+            const [y, m, d] = next.split('/').map(Number);
+            if (y && m && d && !Number.isNaN(y) && !Number.isNaN(m) && !Number.isNaN(d)) {
+              set(new Date(y, m - 1, d));
+            } else if (next === '') {
+              set(null);
+            }
           }}
           style={{
             flex: 1, border: 'none', outline: 'none', background: 'transparent',
@@ -142,6 +155,10 @@ const Calendar: React.FC<{
     const d = new Date(start); d.setDate(start.getDate() + i); return d;
   });
 
+  // S3: minDate/maxDate は「日付」の範囲比較として扱う (時刻部分を切り落とす)。
+  // `minDate={new Date()}` のように現在時刻付きで渡されても「今日」は有効扱い、
+  // `maxDate={new Date()}` も同様に今日は有効扱い。もし時刻込みで比較したい場合は
+  // 呼び出し側で正規化するか、この関数を hour-aware にすること。
   const disabled = (d: Date) =>
     (minDate && d < new Date(minDate.getFullYear(), minDate.getMonth(), minDate.getDate())) ||
     (maxDate && d > new Date(maxDate.getFullYear(), maxDate.getMonth(), maxDate.getDate()));
@@ -294,7 +311,15 @@ export const DateTimeField: React.FC<DateTimeFieldProps> = ({ value, defaultValu
           if (v) { next.setHours(v.getHours(), v.getMinutes()); }
           set(next);
         }} disabled={disabled}/>
-        <TimeField value={v} onChange={(d) => set(d)} disabled={disabled}/>
+        {/* S4: TimeField のクリア (null) で日付まで吹き飛ばさない。
+            時刻だけを抜き取り、既存日付 + new time でマージ。null は無視。 */}
+        <TimeField value={v} onChange={(d) => {
+          if (!d) return;
+          if (!v) { set(d); return; }
+          const next = new Date(v);
+          next.setHours(d.getHours(), d.getMinutes(), 0, 0);
+          set(next);
+        }} disabled={disabled}/>
       </div>
     </div>
   );

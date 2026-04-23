@@ -24,11 +24,27 @@ const NavContext = createContext<NavCtx | null>(null);
  * App 外 (Storybook の isolated story, unit test 等) でも破綻させないよう、
  * Provider が無いケースでは no-op の NavCtx を返す。
  * 本番 App 内 (AppProvider 配下) では本物のコンテキスト値が使われる。
+ *
+ * S1: goto() が silent に動かないのは debug で時間を食うため、dev のみ初回で warn。
  */
+const navWarnedOnce = { dev: false };
 export const useNav = (): NavCtx => {
   const c = useContext(NavContext);
   if (c) return c;
-  return { goto: () => {}, intent: null, clearIntent: () => {} };
+  return {
+    goto: () => {
+      // Vite client types を tsconfig に足していないため、any キャストで参照
+      if ((import.meta as any).env?.DEV && !navWarnedOnce.dev) {
+        navWarnedOnce.dev = true;
+        console.warn(
+          '[useNav] no NavContext provider — goto() will no-op. ' +
+          '(Storybook 等で <App> 外から使う場合は想定内。本番 App 配下なら Provider 漏れを疑うこと)',
+        );
+      }
+    },
+    intent: null,
+    clearIntent: () => {},
+  };
 };
 
 const Nav: React.FC<{
@@ -74,7 +90,7 @@ export const App: React.FC = () => {
   const [intent, setIntent] = useState<NavCtx['intent']>(null);
 
   const ctx: NavCtx = {
-    goto: (p, i = undefined) => { setPage(p); setIntent(i ?? null); },
+    goto: (p, i) => { setPage(p); setIntent(i ?? null); },
     intent,
     clearIntent: () => setIntent(null),
   };

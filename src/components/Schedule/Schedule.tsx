@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { useTokens } from '../../theme';
-import { fonts } from '../../tokens';
+import { fonts, type TokenSet } from '../../tokens';
 import { Typography } from '../Typography';
 import { IconButton } from '../IconButton';
 import { ChevronLeft, ChevronRight, Today } from '../../icons';
@@ -55,8 +55,9 @@ const addDays = (d: Date, n: number) => {
   const r = new Date(d); r.setDate(r.getDate() + n); return r;
 };
 
-const eventColorTok = (t: any, c: ScheduleEvent['color'] = 'primary') => {
-  const map: Record<string, any> = {
+type ColorSlot = { main: string; soft: string; dark?: string };
+const eventColorTok = (t: TokenSet, c: ScheduleEvent['color'] = 'primary'): ColorSlot => {
+  const map: Record<NonNullable<ScheduleEvent['color']>, ColorSlot> = {
     primary: t.brand, secondary: t.accent, success: t.success,
     warning: t.warning, error: t.danger, info: t.info,
   };
@@ -82,13 +83,16 @@ export type ScheduleProps = {
 };
 
 export const Schedule: React.FC<ScheduleProps> = ({
-  view = 'month', onViewChange, date, onDateChange, events = [], onEventClick,
+  view, onViewChange, date, onDateChange, events = [], onEventClick,
   hourRange = [6, 23], sx,
 }) => {
   const t = useTokens();
   const [internalDate, setInternalDate] = useState<Date>(date || new Date());
-  const [internalView, setInternalView] = useState<ScheduleView>(view);
-  const curView = onViewChange ? view : internalView;
+  const [internalView, setInternalView] = useState<ScheduleView>(view ?? 'month');
+  // C1: controlled 判定は prop の有無で統一 (date 側と揃える)。
+  // 旧実装 `onViewChange ? view : internalView` は
+  // `<Schedule view="week" />` だけ渡した場合に view が無視されるバグ。
+  const curView = view !== undefined ? view : internalView;
   const curDate = date ?? internalDate;
   const setView = (v: ScheduleView) => onViewChange ? onViewChange(v) : setInternalView(v);
   const setDate = (d: Date) => onDateChange ? onDateChange(d) : setInternalDate(d);
@@ -178,11 +182,13 @@ const MonthView: React.FC<{
 }> = ({ date, events, onSelectDate, onEventClick }) => {
   const t = useTokens();
   const today = new Date();
+  // N4: 親が `new Date()` を毎 render で渡すと date オブジェクト参照が毎回変わり memo が効かない。
+  // 月ビューは (year, month) だけに依存する計算なので細粒度に
   const cells = useMemo(() => {
     const first = startOfMonth(date);
     const gridStart = addDays(first, -first.getDay());
     return Array.from({ length: 42 }, (_, i) => addDays(gridStart, i));
-  }, [date]);
+  }, [date.getFullYear(), date.getMonth()]);
   const eventsOn = (d: Date) => events.filter(e => sameDay(e.start, d));
 
   return (
@@ -254,11 +260,23 @@ const WeekView: React.FC<{
   const t = useTokens();
   const start = startOfWeek(date);
   const [fromH, toH] = hourRange;
-  const hours = Array.from({ length: Math.max(1, toH - fromH) }, (_, i) => i + fromH);
+  const hoursLen = Math.max(1, toH - fromH);
+  const hours = Array.from({ length: hoursLen }, (_, i) => i + fromH);
+  const HOUR_HEIGHT = 44; // 1 時間あたりのピクセル高
+
+  // C4: 1 時間 1 セルに event を入れるとオーバーフロー/開始分無視の両方が壊れる。
+  // 各日カラムごとに absolute layer を 1 枚もち、top/height を分単位で計算する。
+  const minutesInRange = (d: Date): number | null => {
+    if (d < new Date(start.getFullYear(), start.getMonth(), start.getDate())) return null;
+    const m = (d.getHours() - fromH) * 60 + d.getMinutes();
+    if (m < 0 || m >= hoursLen * 60) return null;
+    return m;
+  };
 
   return (
     <div style={{ display: 'grid', gridTemplateColumns: '60px repeat(7, 1fr)' }}>
-      <div style={{ backgroundColor: t.bg.sunken, borderRight: `1px solid ${t.border.subtle}` }}/>
+      {/* Header row */}
+      <div style={{ backgroundColor: t.bg.sunken, borderRight: `1px solid ${t.border.subtle}`, borderBottom: `1px solid ${t.border.subtle}` }}/>
       {Array.from({ length: 7 }, (_, i) => {
         const d = addDays(start, i);
         const isToday = sameDay(d, new Date());
@@ -276,46 +294,61 @@ const WeekView: React.FC<{
           </div>
         );
       })}
-      {hours.map((h, rowI) => (
-        <React.Fragment key={h}>
-          <div style={{
-            fontSize: 10, color: t.text.muted, padding: '2px 6px', textAlign: 'right',
-            borderRight: `1px solid ${t.border.subtle}`,
+      {/* Hour-label column */}
+      <div style={{ borderRight: `1px solid ${t.border.subtle}` }}>
+        {hours.map(h => (
+          <div key={h} style={{
+            height: HOUR_HEIGHT, fontSize: 10, color: t.text.muted,
+            padding: '2px 6px', textAlign: 'right',
             borderBottom: `1px solid ${t.border.subtle}`,
-            minHeight: 44,
           }}>{String(h).padStart(2, '0')}:00</div>
-          {Array.from({ length: 7 }, (_, colI) => {
-            const cellStart = new Date(addDays(start, colI)); cellStart.setHours(h, 0, 0, 0);
-            const cellEnd = new Date(cellStart); cellEnd.setHours(h + 1);
-            const evs = events.filter(e => e.start >= cellStart && e.start < cellEnd);
-            return (
-              <div key={colI} style={{
-                position: 'relative',
-                borderRight: colI < 6 ? `1px solid ${t.border.subtle}` : 'none',
+        ))}
+      </div>
+      {/* 7 day columns — grid + absolute event layer */}
+      {Array.from({ length: 7 }, (_, colI) => {
+        const dayDate = addDays(start, colI);
+        const dayStart = new Date(dayDate); dayStart.setHours(0, 0, 0, 0);
+        const nextDay = new Date(dayStart); nextDay.setDate(nextDay.getDate() + 1);
+        const dayEvents = events.filter(e => e.start >= dayStart && e.start < nextDay);
+        return (
+          <div key={colI} style={{
+            position: 'relative',
+            borderRight: colI < 6 ? `1px solid ${t.border.subtle}` : 'none',
+          }}>
+            {/* 時間罫線 */}
+            {hours.map(h => (
+              <div key={h} style={{
+                height: HOUR_HEIGHT,
                 borderBottom: `1px solid ${t.border.subtle}`,
-                minHeight: 44, padding: 2,
-              }}>
-                {evs.map(e => {
-                  const c = eventColorTok(t, e.color);
-                  const dur = (e.end.getTime() - e.start.getTime()) / (1000 * 60 * 60);
-                  return (
-                    <button key={e.id} onClick={() => onEventClick?.(e)} style={{
-                      position: 'absolute', inset: '2px 4px', height: `calc(${Math.max(0.5, dur) * 100}% - 4px)`,
-                      padding: '2px 6px', border: 'none', borderLeft: `3px solid ${c.main}`,
-                      borderRadius: 4, backgroundColor: c.soft, color: c.main,
-                      fontSize: 11, textAlign: 'left', cursor: 'pointer', fontWeight: 500,
-                      overflow: 'hidden',
-                    }}>
-                      <div style={{ fontSize: 10, opacity: 0.8 }}>{ja.time(e.start)}</div>
-                      <div>{e.title}</div>
-                    </button>
-                  );
-                })}
-              </div>
-            );
-          })}
-        </React.Fragment>
-      ))}
+              }}/>
+            ))}
+            {/* イベント absolute layer */}
+            {dayEvents.map(e => {
+              const startMin = minutesInRange(e.start);
+              if (startMin === null) return null;
+              const endMin = Math.min(
+                (e.end.getHours() - fromH) * 60 + e.end.getMinutes(),
+                hoursLen * 60,
+              );
+              const heightPx = Math.max(HOUR_HEIGHT * 0.5, ((endMin - startMin) / 60) * HOUR_HEIGHT - 2);
+              const topPx = (startMin / 60) * HOUR_HEIGHT;
+              const c = eventColorTok(t, e.color);
+              return (
+                <button key={e.id} onClick={() => onEventClick?.(e)} style={{
+                  position: 'absolute', top: topPx, left: 2, right: 2, height: heightPx,
+                  padding: '2px 6px', border: 'none', borderLeft: `3px solid ${c.main}`,
+                  borderRadius: 4, backgroundColor: c.soft, color: c.main,
+                  fontSize: 11, textAlign: 'left', cursor: 'pointer', fontWeight: 500,
+                  overflow: 'hidden',
+                }}>
+                  <div style={{ fontSize: 10, opacity: 0.8 }}>{ja.time(e.start)}</div>
+                  <div>{e.title}</div>
+                </button>
+              );
+            })}
+          </div>
+        );
+      })}
     </div>
   );
 };

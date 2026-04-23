@@ -36,8 +36,10 @@ const config: StorybookConfig = {
         if (!code.includes('mdx-react-shim')) return null;
         // file://.../@storybook/addon-docs/dist/mdx-react-shim.js
         //   → @storybook/addon-docs/mdx-react-shim
+        // C5: Windows (`\`) のパス区切りと pnpm 多重ネスト
+        // (`.pnpm/a/.pnpm/b/node_modules/...`) の両方に対応。
         const fixed = code.replace(
-          /["']file:\/\/[^"']+?\/node_modules\/(?:\.pnpm\/[^/]+\/node_modules\/)?@storybook\/addon-docs\/dist\/mdx-react-shim\.m?js["']/g,
+          /["']file:\/\/[^"']+?[/\\]node_modules[/\\](?:\.pnpm[/\\][^/\\]+[/\\]node_modules[/\\])*@storybook[/\\]addon-docs[/\\]dist[/\\]mdx-react-shim\.m?js["']/g,
           '"@storybook/addon-docs/mdx-react-shim"',
         );
         return fixed === code ? null : { code: fixed, map: null };

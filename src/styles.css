@@ -16,3 +16,16 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Chat 等で共通利用する keyframes (インスタンスごとの重複 <style> を回避) */
+@keyframes relay-typing {
+  0%, 80%, 100% { opacity: 0.3; transform: translateY(0); }
+  40%           { opacity: 1;   transform: translateY(-3px); }
+}
+@keyframes relay-map-pulse {
+  0%   { transform: translateX(-50%) scale(0.8); opacity: 0.3; }
+  100% { transform: translateX(-50%) scale(2);   opacity: 0; }
+}
+@keyframes relay-map-blink {
+  50% { opacity: 0.3; }
+}

@@ -21,11 +21,17 @@ type MenubarCtx = {
 
 const MenubarContext = createContext<MenubarCtx | null>(null);
 
-export const Menubar: React.FC<{ children?: React.ReactNode; sx?: React.CSSProperties }> = ({ children, sx }) => {
+/**
+ * S5: children は `MenubarMenu` 要素列を想定。cloneElement で `menuIdx` を
+ * 注入するため、ReactElement 型に narrow。動的並び替えは現状未サポート
+ * (index key のため)。要る場合は MenubarMenu に id prop を追加。
+ */
+type MenubarChild = React.ReactElement<{ menuIdx?: number; children?: React.ReactNode }>;
+export const Menubar: React.FC<{ children?: MenubarChild | MenubarChild[]; sx?: React.CSSProperties }> = ({ children, sx }) => {
   const t = useTokens();
   const [active, setActive] = useState<number | null>(null);
   const [focusIdx, setFocusIdx] = useState(0);
-  const items = React.Children.toArray(children);
+  const items = React.Children.toArray(children) as MenubarChild[];
 
   const handleKey = (e: React.KeyboardEvent) => {
     if (e.key === 'ArrowLeft')  { e.preventDefault(); setFocusIdx((focusIdx - 1 + items.length) % items.length); }
@@ -39,7 +45,7 @@ export const Menubar: React.FC<{ children?: React.ReactNode; sx?: React.CSSPrope
         display: 'inline-flex', gap: 2, padding: 4, backgroundColor: t.bg.surface,
         border: `1px solid ${t.border.subtle}`, borderRadius: 8, ...sx,
       }}>
-        {items.map((item: any, i) => React.cloneElement(item, { key: i, menuIdx: i }))}
+        {items.map((item, i) => React.cloneElement(item, { key: i, menuIdx: i }))}
       </div>
     </MenubarContext.Provider>
   );
