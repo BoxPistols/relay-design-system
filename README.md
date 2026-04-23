@@ -89,9 +89,9 @@ theme も `createTheme({ components: { MuiButton: { styleOverrides: { root: { va
 `main` ブランチへの push で `.github/workflows/pages.yml` が走り、Pages に自動デプロイされる。
 初回のみ GitHub リポジトリの **Settings → Pages → Source = "GitHub Actions"** を選択する必要あり。
 
-公開 URL: `https://BoxPistols.github.io/relay-design-system/`
+公開 URL: `https://BoxPistols.github.io/mui9-relay-design-system/`
 
-`vite.config.ts` の `base` は `BASE_PATH` 環境変数で切替 (CI 時 `/relay-design-system/`、
+`vite.config.ts` の `base` は `BASE_PATH` 環境変数で切替 (CI 時 `/mui9-relay-design-system/`、
 ローカル dev は `/`)。
 
 ### Storybook → Vercel
@@ -99,7 +99,7 @@ theme も `createTheme({ components: { MuiButton: { styleOverrides: { root: { va
 `vercel.json` に静的サイトとしての build 設定あり。2 通り:
 
 **A) ダッシュボード連携 (推奨)**
-1. [vercel.com/new](https://vercel.com/new) → `BoxPistols/relay-design-system` を Import
+1. [vercel.com/new](https://vercel.com/new) → `BoxPistols/mui9-relay-design-system` を Import
 2. `vercel.json` が検出され、以下が自動適用される:
    - `buildCommand`: `pnpm build-storybook`
    - `outputDirectory`: `storybook-static`

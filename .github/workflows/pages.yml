@@ -37,7 +37,7 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Build Vite app (with repo subpath base)
         env:
-          BASE_PATH: /relay-design-system/
+          BASE_PATH: /mui9-relay-design-system/
         run: pnpm build
       - uses: actions/configure-pages@v5
         with:
