@@ -1,12 +1,17 @@
-import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
+import React, { createContext, useContext, useState, useRef } from 'react';
 import { useTokens } from '../../theme';
 import { fonts } from '../../tokens';
+import { Popover } from '../../utils/Popover';
 
 /**
  * ★ MUI v9 新規コンポーネント: Menubar (Base UI ベース)
  *
- * 水平型メニューバー + サブメニュー。v7までは単一レベルしか組めなかった領域が
- * v9で正式サポート。Roving tabindex で ←→ キーで移動可能。
+ * 水平型メニューバー + サブメニュー。v7 までは単一レベルしか組めなかった領域が
+ * v9 で正式サポート。Roving tabindex で ←→ キーで移動可能。
+ *
+ * Portal 化 (2026-04 の修正): `MenubarContent` / `MenubarSubmenu` は祖先の
+ * `overflow: hidden` に切られないよう `Popover` (document.body portal) で描画。
+ * 祖先の Card 等で `overflow: 'visible'` を毎回書き足す必要がなくなった。
  *
  * 本番移行時:
  *   import { Menubar, MenubarMenu, MenubarTrigger, MenubarContent, MenubarItem, MenubarSubmenu } from '@mui/material/Menubar';
@@ -18,13 +23,16 @@ type MenubarCtx = {
   focusIdx: number;
   setFocusIdx: (n: number) => void;
 };
-
 const MenubarContext = createContext<MenubarCtx | null>(null);
+
+/** 各 MenubarMenu 内で Trigger と Content が共有する anchor ref */
+type MenuCtx = { triggerRef: React.RefObject<HTMLButtonElement | null>; menuIdx: number };
+const MenuContext = createContext<MenuCtx | null>(null);
 
 /**
  * S5: children は `MenubarMenu` 要素列を想定。cloneElement で `menuIdx` を
  * 注入するため、ReactElement 型に narrow。動的並び替えは現状未サポート
- * (index key のため)。要る場合は MenubarMenu に id prop を追加。
+ * (index key のため)。
  */
 type MenubarChild = React.ReactElement<{ menuIdx?: number; children?: React.ReactNode }>;
 export const Menubar: React.FC<{ children?: MenubarChild | MenubarChild[]; sx?: React.CSSProperties }> = ({ children, sx }) => {
@@ -51,21 +59,25 @@ export const Menubar: React.FC<{ children?: MenubarChild | MenubarChild[]; sx?: 
   );
 };
 
-export const MenubarMenu: React.FC<{ children?: React.ReactNode; menuIdx?: number }> = ({ children, menuIdx }) => (
-  <div style={{ position: 'relative' }}>
-    {React.Children.map(children, (c: any) => c && React.cloneElement(c, { menuIdx }))}
-  </div>
-);
+export const MenubarMenu: React.FC<{ children?: React.ReactNode; menuIdx?: number }> = ({ children, menuIdx = 0 }) => {
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
+  return (
+    <MenuContext.Provider value={{ triggerRef, menuIdx }}>
+      <div>{children}</div>
+    </MenuContext.Provider>
+  );
+};
 
-export const MenubarTrigger: React.FC<{ children?: React.ReactNode; menuIdx?: number }> = ({ children, menuIdx = 0 }) => {
+export const MenubarTrigger: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const t = useTokens();
   const ctx = useContext(MenubarContext)!;
-  const active = ctx.active === menuIdx;
-  const focused = ctx.focusIdx === menuIdx;
+  const menu = useContext(MenuContext)!;
+  const active = ctx.active === menu.menuIdx;
+  const focused = ctx.focusIdx === menu.menuIdx;
   return (
-    <button role="menuitem" tabIndex={focused ? 0 : -1}
-      onClick={() => ctx.setActive(active ? null : menuIdx)}
-      onMouseEnter={() => { if (ctx.active !== null) ctx.setActive(menuIdx); }}
+    <button ref={menu.triggerRef} role="menuitem" tabIndex={focused ? 0 : -1}
+      onClick={() => ctx.setActive(active ? null : menu.menuIdx)}
+      onMouseEnter={() => { if (ctx.active !== null) ctx.setActive(menu.menuIdx); }}
       style={{
         padding: '6px 12px', border: 'none', borderRadius: 6,
         backgroundColor: active ? t.brand.soft : 'transparent',
@@ -76,28 +88,24 @@ export const MenubarTrigger: React.FC<{ children?: React.ReactNode; menuIdx?: nu
   );
 };
 
-export const MenubarContent: React.FC<{ children?: React.ReactNode; menuIdx?: number }> = ({ children, menuIdx = 0 }) => {
+export const MenubarContent: React.FC<{ children?: React.ReactNode }> = ({ children }) => {
   const t = useTokens();
   const ctx = useContext(MenubarContext)!;
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node)) ctx.setActive(null);
-    };
-    if (ctx.active === menuIdx) {
-      document.addEventListener('mousedown', h);
-      return () => document.removeEventListener('mousedown', h);
-    }
-  }, [ctx.active, menuIdx]);
-
-  if (ctx.active !== menuIdx) return null;
+  const menu = useContext(MenuContext)!;
+  const open = ctx.active === menu.menuIdx;
   return (
-    <div ref={ref} role="menu" style={{
-      position: 'absolute', top: 'calc(100% + 4px)', left: 0, zIndex: 1000,
-      minWidth: 180, backgroundColor: t.bg.surface,
-      border: `1px solid ${t.border.subtle}`, borderRadius: 8,
-      boxShadow: t.shadow.md, padding: 4,
-    }}>{children}</div>
+    <Popover
+      anchorRef={menu.triggerRef} open={open} onClose={() => ctx.setActive(null)}
+      placement="bottom" align="start"
+      role="menu"
+      style={{
+        zIndex: t.z.popover,
+        minWidth: 180, backgroundColor: t.bg.surface,
+        border: `1px solid ${t.border.subtle}`, borderRadius: 8,
+        boxShadow: t.shadow.md, padding: 4,
+      }}>
+      {children}
+    </Popover>
   );
 };
 
@@ -130,26 +138,44 @@ export const MenubarItem: React.FC<{
 
 export const MenubarSubmenu: React.FC<{ label: React.ReactNode; children?: React.ReactNode }> = ({ label, children }) => {
   const t = useTokens();
-  const [open, setOpen] = useState(false);
+  // Portal で popover が body 直下に飛ぶため、trigger 側 onMouseLeave だけだと
+  // popover に mouse を移動した瞬間に閉じる。trigger / popover どちらかに
+  // hover している間は open を維持するよう 2 つの mouse-state を OR する。
+  const [hoverTrigger, setHoverTrigger] = useState(false);
+  const [hoverContent, setHoverContent] = useState(false);
+  const open = hoverTrigger || hoverContent;
+  const triggerRef = useRef<HTMLButtonElement | null>(null);
   return (
-    <div style={{ position: 'relative' }}
-      onMouseEnter={() => setOpen(true)} onMouseLeave={() => setOpen(false)}>
-      <button style={{
-        display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between',
-        padding: '8px 12px', border: 'none', borderRadius: 6, cursor: 'pointer',
-        backgroundColor: open ? t.bg.sunken : 'transparent',
-        color: t.text.primary, fontSize: 13, fontFamily: fonts.sans, textAlign: 'left',
-      }}>
+    <div>
+      <button ref={triggerRef}
+        onMouseEnter={() => setHoverTrigger(true)}
+        onMouseLeave={() => setHoverTrigger(false)}
+        style={{
+          display: 'flex', width: '100%', alignItems: 'center', justifyContent: 'space-between',
+          padding: '8px 12px', border: 'none', borderRadius: 6, cursor: 'pointer',
+          backgroundColor: open ? t.bg.sunken : 'transparent',
+          color: t.text.primary, fontSize: 13, fontFamily: fonts.sans, textAlign: 'left',
+        }}>
         <span>{label}</span>
         <span style={{ fontSize: 10, color: t.text.muted }}>▶</span>
       </button>
-      {open && (
-        <div role="menu" style={{
-          position: 'absolute', left: '100%', top: 0, marginLeft: 4, minWidth: 160,
-          backgroundColor: t.bg.surface, border: `1px solid ${t.border.subtle}`,
-          borderRadius: 8, boxShadow: t.shadow.md, padding: 4, zIndex: 1001,
-        }}>{children}</div>
-      )}
+      <Popover
+        anchorRef={triggerRef} open={open}
+        onClose={() => { setHoverTrigger(false); setHoverContent(false); }}
+        placement="bottom" align="end"
+        role="menu"
+        style={{
+          zIndex: t.z.popover + 1,
+          minWidth: 160, backgroundColor: t.bg.surface,
+          border: `1px solid ${t.border.subtle}`, borderRadius: 8,
+          boxShadow: t.shadow.md, padding: 4,
+        }}>
+        <div
+          onMouseEnter={() => setHoverContent(true)}
+          onMouseLeave={() => setHoverContent(false)}>
+          {children}
+        </div>
+      </Popover>
     </div>
   );
 };

@@ -1,8 +1,9 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef } from 'react';
 import { useTokens } from '../../theme';
 import { fonts } from '../../tokens';
 import { Typography } from '../Typography';
 import { IconButton } from '../IconButton';
+import { Popover } from '../../utils/Popover';
 import { CalendarMonth, AccessTime, ChevronLeft, ChevronRight } from '../../icons';
 
 /**
@@ -49,22 +50,13 @@ export const DateField: React.FC<DateFieldProps> = ({
   const [internal, setInternal] = useState<Date | null>(defaultValue);
   const [open, setOpen] = useState(false);
   const [focus, setFocus] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+  const anchorRef = useRef<HTMLDivElement>(null);
   const v = value !== undefined ? value : internal;
 
   const set = (d: Date | null) => {
     setInternal(d); onChange?.(d);
   };
-
-  useEffect(() => {
-    const h = (e: MouseEvent) => {
-      if (!ref.current?.contains(e.target as Node)) setOpen(false);
-    };
-    if (open) {
-      document.addEventListener('mousedown', h);
-      return () => document.removeEventListener('mousedown', h);
-    }
-  }, [open]);
+  // Popover が外側クリック判定を引き受けるので、ここでの document 購読は不要。
 
   // C2: 入力中の生文字列は別 state で保持し、parse 成功時のみ `onChange` を呼ぶ。
   // これで "2026" や "2026/04" と打っている途中で state が巻き戻らない。
@@ -76,13 +68,13 @@ export const DateField: React.FC<DateFieldProps> = ({
   const text = rawText ?? formatted;
 
   return (
-    <div ref={ref} style={{ position: 'relative', minWidth: 180, ...sx }}>
+    <div style={{ minWidth: 180, ...sx }}>
       {label && (
         <Typography variant="caption" color="secondary" sx={{ display: 'block', marginBottom: 4 }}>
           {label}
         </Typography>
       )}
-      <div style={{
+      <div ref={anchorRef} style={{
         display: 'flex', alignItems: 'center', gap: 6, padding: '0 10px',
         border: `1px solid ${focus || open ? t.brand.main : t.border.default}`,
         borderRadius: 8, backgroundColor: disabled ? t.bg.sunken : t.bg.surface,
@@ -117,22 +109,24 @@ export const DateField: React.FC<DateFieldProps> = ({
           <CalendarMonth fontSize="small"/>
         </IconButton>
       </div>
-      {open && (
-        <div role="dialog" aria-label="Calendar"
-          {...(slotProps?.popper || {})}
-          style={{
-            position: 'absolute', top: 'calc(100% + 4px)', left: 0, zIndex: 1000,
-            backgroundColor: t.bg.surface, border: `1px solid ${t.border.subtle}`,
-            borderRadius: 10, boxShadow: t.shadow.lg, padding: 12, minWidth: 280,
-            ...(slotProps?.popper?.style || {}),
-          }}>
-          <Calendar
-            value={v} onChange={(d) => { set(d); setOpen(false); }}
-            minDate={minDate} maxDate={maxDate}
-            dayProps={slotProps?.day}
-          />
-        </div>
-      )}
+      <Popover
+        anchorRef={anchorRef} open={open} onClose={() => setOpen(false)}
+        placement="bottom" align="start"
+        role="dialog" aria-label="Calendar"
+        {...(slotProps?.popper || {})}
+        style={{
+          zIndex: t.z.popover,
+          backgroundColor: t.bg.surface,
+          border: `1px solid ${t.border.subtle}`,
+          borderRadius: 10, boxShadow: t.shadow.lg, padding: 12, minWidth: 280,
+          ...(slotProps?.popper?.style || {}),
+        }}>
+        <Calendar
+          value={v} onChange={(d) => { set(d); setOpen(false); }}
+          minDate={minDate} maxDate={maxDate}
+          dayProps={slotProps?.day}
+        />
+      </Popover>
     </div>
   );
 };

@@ -15,7 +15,15 @@ export type TokenSet = {
   danger: { main: string; soft: string; dark: string };
   info: { main: string; soft: string; dark: string };
   shadow: { sm: string; md: string; lg: string };
+  /**
+   * z-index スケール (MUI v9 の theme.zIndex と役割同等)。
+   * popover (dropdown / calendar) → modal → drawer → tooltip の上下関係を保つ。
+   */
+  z: { popover: number; drawer: number; modal: number; tooltip: number };
 };
+
+// mode に依存しない共通トークン (light/dark 間で差が無いもの)
+const zTokens = { popover: 1300, drawer: 1200, modal: 1400, tooltip: 1500 };
 
 export const buildTokens = (mode: 'light' | 'dark'): TokenSet => mode === 'dark' ? {
   bg: { canvas: primitive.gray[950], surface: primitive.gray[900], sunken: '#040711', elevated: primitive.gray[800] },
@@ -28,6 +36,7 @@ export const buildTokens = (mode: 'light' | 'dark'): TokenSet => mode === 'dark'
   danger: { main: primitive.rose[400], soft: 'rgba(251,113,133,0.14)', dark: primitive.rose[500] },
   info: { main: primitive.sky[400], soft: 'rgba(56,189,248,0.14)', dark: primitive.sky[500] },
   shadow: { sm: '0 1px 2px rgba(0,0,0,0.4)', md: '0 4px 12px rgba(0,0,0,0.5)', lg: '0 20px 60px rgba(0,0,0,0.5)' },
+  z: zTokens,
 } : {
   bg: { canvas: primitive.gray[50], surface: primitive.gray[0], sunken: primitive.gray[100], elevated: primitive.gray[0] },
   border: { subtle: primitive.gray[200], default: primitive.gray[300], strong: primitive.gray[400] },
@@ -39,6 +48,7 @@ export const buildTokens = (mode: 'light' | 'dark'): TokenSet => mode === 'dark'
   danger: { main: primitive.rose[500], soft: 'rgba(244,63,94,0.08)', dark: primitive.rose[600] },
   info: { main: primitive.sky[500], soft: 'rgba(14,165,233,0.08)', dark: primitive.sky[600] },
   shadow: { sm: '0 1px 2px rgba(0,0,0,0.05)', md: '0 4px 12px rgba(0,0,0,0.08)', lg: '0 20px 60px rgba(0,0,0,0.12)' },
+  z: zTokens,
 };
 
 export const fonts = {

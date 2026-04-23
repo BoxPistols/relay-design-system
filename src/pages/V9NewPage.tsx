@@ -123,7 +123,7 @@ export const V9NewPage: React.FC = () => {
           水平型メニューバー。v9 でサブメニュー / ネストメニューが正式サポート。
           ←→ キーでトリガー間移動、Esc で閉じる。
         </Typography>
-        <Card sx={{ padding: 24, overflow: 'visible' }}>
+        <Card sx={{ padding: 24 }}>
           <Menubar>
             <MenubarMenu>
               <MenubarTrigger>ファイル</MenubarTrigger>
@@ -330,19 +330,19 @@ export const V9NewPage: React.FC = () => {
         </Typography>
         <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: 24 }}>
           {/* overflow: visible は popover が Card のクリップに潰されないため */}
-          <Card sx={{ overflow: 'visible' }}>
+          <Card>
             <CardContent>
               <Typography variant="overline" color="secondary" sx={{ display: 'block', marginBottom: 12 }}>DateField</Typography>
               <DateField label="配達希望日" defaultValue={new Date()}/>
             </CardContent>
           </Card>
-          <Card sx={{ overflow: 'visible' }}>
+          <Card>
             <CardContent>
               <Typography variant="overline" color="secondary" sx={{ display: 'block', marginBottom: 12 }}>TimeField</Typography>
               <TimeField label="出発時刻" defaultValue={new Date()} step={15}/>
             </CardContent>
           </Card>
-          <Card sx={{ overflow: 'visible' }}>
+          <Card>
             <CardContent>
               <Typography variant="overline" color="secondary" sx={{ display: 'block', marginBottom: 12 }}>DateTimeField</Typography>
               <DateTimeField label="予約日時" defaultValue={new Date()}/>

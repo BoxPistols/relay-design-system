@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
+import { expect, fn, userEvent, within } from 'storybook/test';
 import { Button, Stack } from '../../../components';
 import * as Icons from '../../../icons';
 
@@ -48,4 +49,38 @@ export const Colors: Story = {
       ))}
     </Stack>
   ),
+};
+
+/**
+ * Interaction test: クリックで onClick が発火し、disabled では発火しないことを検証。
+ * `pnpm test:storybook` で browser mode (chromium) で実行される。
+ */
+export const ClickBehavior: Story = {
+  args: {
+    variant: 'contained',
+    color: 'primary',
+    children: '送信',
+    onClick: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const btn = canvas.getByRole('button', { name: '送信' });
+    await userEvent.click(btn);
+    await expect(args.onClick).toHaveBeenCalledOnce();
+  },
+};
+
+export const DisabledNoClick: Story = {
+  args: {
+    variant: 'contained',
+    disabled: true,
+    children: '送信',
+    onClick: fn(),
+  },
+  play: async ({ canvasElement, args }) => {
+    const canvas = within(canvasElement);
+    const btn = canvas.getByRole('button', { name: '送信' });
+    await userEvent.click(btn);
+    await expect(args.onClick).not.toHaveBeenCalled();
+  },
 };

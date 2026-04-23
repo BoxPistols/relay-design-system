@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/react-vite';
 import React, { useState } from 'react';
+import { expect, userEvent, within } from 'storybook/test';
 import {
   Chat, ChatHeader, ChatList, ChatMessage, ChatComposer, ChatTypingIndicator, ChatAIAvatar,
 } from '../../../components/Chat';
@@ -121,4 +122,58 @@ export const ErrorState: Story = {
       <ChatComposer/>
     </Chat>
   ),
+};
+
+/**
+ * Interaction test: Composer に文字を打って Enter で送信すると
+ * ChatList に新メッセージが追加、input がクリアされることを検証。
+ */
+export const SendMessageInteraction: Story = {
+  render: () => {
+    const [msgs, setMsgs] = useState<{ id: number; text: string }[]>([]);
+    return (
+      <Chat height={300}>
+        <ChatHeader title="テストチャット" avatar={<Avatar size={32}>T</Avatar>}/>
+        <ChatList>
+          {msgs.map(m => (
+            <ChatMessage key={m.id} variant="sent" status="sent">{m.text}</ChatMessage>
+          ))}
+        </ChatList>
+        <ChatComposer onSend={(text) => setMsgs(p => [...p, { id: Date.now(), text }])}/>
+      </Chat>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByPlaceholderText('メッセージを入力…');
+    await userEvent.type(input, 'こんにちは{Enter}');
+    await expect(await canvas.findByText('こんにちは')).toBeInTheDocument();
+    await expect(input).toHaveValue('');
+  },
+};
+
+/**
+ * Interaction test: Shift+Enter は送信しない (改行として扱う)。
+ */
+export const ShiftEnterDoesNotSubmit: Story = {
+  render: () => {
+    const [msgs, setMsgs] = useState<{ id: number; text: string }[]>([]);
+    return (
+      <Chat height={260}>
+        <ChatHeader title="改行テスト" avatar={<Avatar size={32}>T</Avatar>}/>
+        <ChatList>
+          {msgs.map(m => <ChatMessage key={m.id} variant="sent">{m.text}</ChatMessage>)}
+        </ChatList>
+        <ChatComposer onSend={(text) => setMsgs(p => [...p, { id: Date.now(), text }])}/>
+      </Chat>
+    );
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement);
+    const input = canvas.getByPlaceholderText('メッセージを入力…') as HTMLTextAreaElement;
+    await userEvent.type(input, 'line1{Shift>}{Enter}{/Shift}line2');
+    await expect(input.value).toContain('line1');
+    await expect(input.value).toContain('line2');
+    await expect(canvas.queryByText(/^line/)).not.toBeInTheDocument();
+  },
 };
